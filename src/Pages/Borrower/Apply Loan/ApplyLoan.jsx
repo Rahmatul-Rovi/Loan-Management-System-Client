@@ -44,7 +44,7 @@ const ApplyLoan = () => {
 
   // Fetch loan details
   useEffect(() => {
-    fetch(`https://loan-link-loan-management-server.vercel.app/loans/${id}`)
+    fetch(`http://localhost:3000/loans/${id}`)
       .then((res) => res.json())
       .then((data) => {
         setLoan(data);
@@ -72,7 +72,7 @@ const ApplyLoan = () => {
     };
 
     try {
-      const res = await fetch("https://loan-link-loan-management-server.vercel.app/apply-loan", {
+      const res = await fetch("http://localhost:3000/apply-loan", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),

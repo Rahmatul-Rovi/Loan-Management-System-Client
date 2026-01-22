@@ -25,7 +25,7 @@ const AvailableLoan = () => {
   }, []);
 
   useEffect(() => {
-    fetch('https://loan-link-loan-management-server.vercel.app/loans')
+    fetch('http://localhost:3000/loans')
       .then((res) => res.json())
       .then((data) => {
         setLoans(data.slice(0, 4));

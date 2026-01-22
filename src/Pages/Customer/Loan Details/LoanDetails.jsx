@@ -33,7 +33,7 @@ const LoanDetails = () => {
 
   // Fetch Loan Data
   useEffect(() => {
-    fetch(`https://loan-link-loan-management-server.vercel.app/loans/${id}`)
+    fetch(`http://localhost:3000/loans/${id}`)
       .then((res) => res.json())
       .then((data) => {
         setLoan(data);

@@ -14,7 +14,7 @@ const AdminLoanApply = () => {
   useEffect(() => {
     if (!token) return;
 
-    fetch('https://loan-link-loan-management-server.vercel.app/applications', {
+    fetch('http://localhost:3000/applications', {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -52,7 +52,7 @@ const AdminLoanApply = () => {
 
   // Update application status
   const handleStatusChange = (appId, newStatus) => {
-    fetch(`https://loan-link-loan-management-server.vercel.app/applications/${appId}`, {
+    fetch(`http://localhost:3000/applications/${appId}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
