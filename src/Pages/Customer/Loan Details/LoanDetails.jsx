@@ -140,7 +140,7 @@ const LoanDetails = () => {
             {/* Left: Loan Image */}
             <motion.div className="md:w-1/2">
               <motion.img
-                src={loan.loanImage}
+                src={loan?.image || loan?.loanImage}
                 alt={loan.loanTitle}
                 className="w-full h-full object-cover md:h-[500px]"
                 animate={{ y: [0, -10, 0] }}

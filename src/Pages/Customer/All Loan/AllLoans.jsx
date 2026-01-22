@@ -1,19 +1,19 @@
-import React, { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
-import { useNavigate } from 'react-router';
+import React, { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import { useNavigate } from "react-router";
 
 const AllLoans = () => {
   const [loans, setLoans] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [theme, setTheme] = useState('light');
-  const [error, setError] = useState('');
+  const [theme, setTheme] = useState("light");
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   // Observe theme changes
   useEffect(() => {
     const updateTheme = () => {
       const currentTheme =
-        document.documentElement.getAttribute('data-theme') || 'light';
+        document.documentElement.getAttribute("data-theme") || "light";
       setTheme(currentTheme);
     };
 
@@ -21,7 +21,7 @@ const AllLoans = () => {
     const observer = new MutationObserver(updateTheme);
     observer.observe(document.documentElement, {
       attributes: true,
-      attributeFilter: ['data-theme'],
+      attributeFilter: ["data-theme"],
     });
 
     return () => observer.disconnect();
@@ -31,21 +31,21 @@ const AllLoans = () => {
   useEffect(() => {
     const fetchLoans = async () => {
       try {
-        const res = await fetch('http://localhost:3000/loans');
+        const res = await fetch("http://localhost:3000/loans");
         // No Authorization header needed since it's a public endpoint
 
         const data = await res.json();
 
         if (!res.ok) {
-          setError(data.message || 'Failed to fetch loans');
+          setError(data.message || "Failed to fetch loans");
           setLoans([]);
         } else {
           // Ensure loans is an array
           setLoans(Array.isArray(data) ? data : []);
         }
       } catch (err) {
-        console.error('Error fetching loans:', err);
-        setError('Error fetching loans');
+        console.error("Error fetching loans:", err);
+        setError("Error fetching loans");
         setLoans([]);
       } finally {
         setLoading(false);
@@ -59,12 +59,12 @@ const AllLoans = () => {
     return (
       <div
         className={`flex justify-center items-center h-screen ${
-          theme === 'dark' ? 'bg-[#0A122A]' : 'bg-[#F8FAFC]'
+          theme === "dark" ? "bg-[#0A122A]" : "bg-[#F8FAFC]"
         }`}
       >
         <p
           className={`text-lg animate-pulse ${
-            theme === 'dark' ? 'text-[#E2E8F0]' : 'text-gray-500'
+            theme === "dark" ? "text-[#E2E8F0]" : "text-gray-500"
           }`}
         >
           Loading loans...
@@ -77,10 +77,12 @@ const AllLoans = () => {
     return (
       <div
         className={`flex justify-center items-center h-screen ${
-          theme === 'dark' ? 'bg-[#0A122A]' : 'bg-[#F8FAFC]'
+          theme === "dark" ? "bg-[#0A122A]" : "bg-[#F8FAFC]"
         }`}
       >
-        <p className={`text-lg ${theme === 'dark' ? 'text-[#E2E8F0]' : 'text-gray-500'}`}>
+        <p
+          className={`text-lg ${theme === "dark" ? "text-[#E2E8F0]" : "text-gray-500"}`}
+        >
           {error}
         </p>
       </div>
@@ -90,7 +92,7 @@ const AllLoans = () => {
   return (
     <div
       className={`${
-        theme === 'dark' ? 'bg-[#0A122A]' : 'bg-[#F8FAFC]'
+        theme === "dark" ? "bg-[#0A122A]" : "bg-[#F8FAFC]"
       } p-8 min-h-screen flex flex-col items-center`}
     >
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 w-11/12">
@@ -104,34 +106,34 @@ const AllLoans = () => {
               whileHover={{
                 scale: 1.05,
                 boxShadow:
-                  theme === 'dark'
-                    ? '0 20px 40px rgba(30,144,255,0.4)'
-                    : '0 15px 30px rgba(0,60,143,0.2)',
+                  theme === "dark"
+                    ? "0 20px 40px rgba(30,144,255,0.4)"
+                    : "0 15px 30px rgba(0,60,143,0.2)",
               }}
               className={`relative w-full rounded-2xl border overflow-hidden cursor-pointer flex flex-col ${
-                theme === 'dark'
-                  ? 'bg-[#111B33] border-[#1E293B]'
-                  : 'bg-white border-[#E5E7EB]'
+                theme === "dark"
+                  ? "bg-[#111B33] border-[#1E293B]"
+                  : "bg-white border-[#E5E7EB]"
               }`}
             >
               {/* Loan Image */}
               <div className="relative">
                 <motion.img
-                  src={loan.loanImage}
+                 src={loan?.image || loan?.loanImage || "https://i.ibb.co/L8N7pYv/placeholder.jpg"}
                   alt={loan.loanTitle}
                   className="w-full h-48 object-cover"
                   animate={{ y: [0, -10, 0] }}
                   transition={{
                     duration: 5,
                     repeat: Infinity,
-                    ease: 'easeInOut',
+                    ease: "easeInOut",
                   }}
                 />
                 <div
                   className={`absolute inset-0 bg-gradient-to-t ${
-                    theme === 'dark'
-                      ? 'from-black/50 via-transparent'
-                      : 'from-black/20 via-transparent'
+                    theme === "dark"
+                      ? "from-black/50 via-transparent"
+                      : "from-black/20 via-transparent"
                   }`}
                 />
               </div>
@@ -141,31 +143,34 @@ const AllLoans = () => {
                 <div>
                   <h3
                     className={`text-xl font-bold mb-2 truncate ${
-                      theme === 'dark' ? 'text-[#E2E8F0]' : 'text-[#1F2937]'
+                      theme === "dark" ? "text-[#E2E8F0]" : "text-[#1F2937]"
                     }`}
                   >
                     {loan.loanTitle}
                   </h3>
                   <p
                     className={`text-sm mb-1 ${
-                      theme === 'dark' ? 'text-[#94A3B8]' : 'text-gray-500'
+                      theme === "dark" ? "text-[#94A3B8]" : "text-gray-500"
                     }`}
                   >
-                    <span className="font-medium">Category:</span> {loan.category}
+                    <span className="font-medium">Category:</span>{" "}
+                    {loan.category}
                   </p>
                   <p
                     className={`text-sm mb-1 ${
-                      theme === 'dark' ? 'text-[#94A3B8]' : 'text-gray-500'
+                      theme === "dark" ? "text-[#94A3B8]" : "text-gray-500"
                     }`}
                   >
-                    <span className="font-medium">Interest:</span> {loan.interestRate}%
+                    <span className="font-medium">Interest:</span>{" "}
+                    {loan.interestRate}%
                   </p>
                   <p
                     className={`text-sm mb-3 ${
-                      theme === 'dark' ? 'text-[#94A3B8]' : 'text-gray-500'
+                      theme === "dark" ? "text-[#94A3B8]" : "text-gray-500"
                     }`}
                   >
-                    <span className="font-medium">Max Limit:</span> ${loan.maxLimit}
+                    <span className="font-medium">Max Limit:</span> $
+                    {loan.maxLimit}
                   </p>
                 </div>
 
@@ -173,9 +178,9 @@ const AllLoans = () => {
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   className={`w-full py-2 rounded-xl font-semibold transition-all ${
-                    theme === 'dark'
-                      ? 'bg-[#1E90FF] hover:bg-[#00E0FF] text-[#0A122A] shadow-xl'
-                      : 'bg-[#003C8F] hover:bg-[#1E4C9A] text-white shadow-lg'
+                    theme === "dark"
+                      ? "bg-[#1E90FF] hover:bg-[#00E0FF] text-[#0A122A] shadow-xl"
+                      : "bg-[#003C8F] hover:bg-[#1E4C9A] text-white shadow-lg"
                   }`}
                   onClick={() => navigate(`/all-loans/${loan._id}`)}
                 >
@@ -184,7 +189,7 @@ const AllLoans = () => {
               </div>
 
               {/* Dark mode floating shapes */}
-              {theme === 'dark' && (
+              {theme === "dark" && (
                 <>
                   <motion.div
                     className="absolute top-2 left-2 w-10 h-10 bg-[#00E0FF]/20 rounded-full blur-2xl"
@@ -192,7 +197,7 @@ const AllLoans = () => {
                     transition={{
                       duration: 6,
                       repeat: Infinity,
-                      ease: 'easeInOut',
+                      ease: "easeInOut",
                     }}
                   />
                   <motion.div
@@ -201,7 +206,7 @@ const AllLoans = () => {
                     transition={{
                       duration: 7,
                       repeat: Infinity,
-                      ease: 'easeInOut',
+                      ease: "easeInOut",
                     }}
                   />
                 </>
@@ -211,7 +216,7 @@ const AllLoans = () => {
         ) : (
           <p
             className={`col-span-full text-center ${
-              theme === 'dark' ? 'text-[#94A3B8]' : 'text-gray-500'
+              theme === "dark" ? "text-[#94A3B8]" : "text-gray-500"
             }`}
           >
             No loans found.
