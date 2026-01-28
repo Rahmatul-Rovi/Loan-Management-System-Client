@@ -18,7 +18,7 @@ const Banner = () => {
             Simplify Your Loans with <span className="text-info">LoanLink</span>
           </h1>
           <p className="text-white/80 text-lg mb-6">
-            Track, approve, and manage loans seamlessly. Secure, smart, and optimized for modern finance.
+            Experience effortless loan management in one unified space. We simplify complex financial workflows with smart automation and enterprise-grade security you can trust.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
             <motion.a
