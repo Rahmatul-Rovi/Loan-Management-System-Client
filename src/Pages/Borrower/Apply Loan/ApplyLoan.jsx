@@ -43,6 +43,7 @@ const ApplyLoan = () => {
   }, []);
 
   // Fetch loan details
+  // Fetch loan details - Database field er namer shathe mil rekhe update kora hoyeche
   useEffect(() => {
     fetch(`http://localhost:3000/loans/${id}`)
       .then((res) => res.json())
@@ -50,10 +51,11 @@ const ApplyLoan = () => {
         setLoan(data);
         setLoading(false);
 
+        // Database-e thaka category ke Title hishebe ebong interest ke Rate hishebe set koro
         reset({
           borrowerEmail: user?.email || "",
-          loanTitle: data.loanTitle,
-          interestRate: data.interestRate + "%",
+          loanTitle: data.category || "No Title Found",
+          interestRate: data.interest || "0%",
         });
       })
       .catch(() => setLoading(false));
@@ -118,9 +120,7 @@ const ApplyLoan = () => {
           theme === "dark" ? "bg-[#111B33]" : "bg-white"
         }`}
       >
-        <h2 className="text-3xl font-bold mb-6">
-          Apply for {loan.loanTitle}
-        </h2>
+        <h2 className="text-3xl font-bold mb-6">Apply for {loan.category}</h2>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           {/* Auto-filled fields */}
@@ -187,9 +187,7 @@ const ApplyLoan = () => {
               placeholder="NID / Passport"
               className="input input-bordered w-full"
             />
-            {errors.nid && (
-              <p className="text-red-500">{errors.nid.message}</p>
-            )}
+            {errors.nid && <p className="text-red-500">{errors.nid.message}</p>}
           </div>
 
           <div>
