@@ -68,6 +68,7 @@ const ApplyLoan = () => {
     const payload = {
       ...formData,
       loanId: loan._id,
+      loanTitle: loan.category,
       date: new Date(),
       status: "pending",
       feeStatus: "unpaid",

@@ -183,12 +183,11 @@ const LoanDetails = () => {
                     finalPlans = rawPlans;
                   } else if (typeof rawPlans === "string") {
                     try {
-                      // Jodi database theke asha string eibhabe thake: "["60 months"]"
-                      // Tahole eita double parse korle ashol array pawa jay
+                     
                       let cleanStr = rawPlans.trim();
                       finalPlans = JSON.parse(cleanStr);
 
-                      // Jodi parse korar por-o seta string thake (double quotation er karone)
+                  
                       if (typeof finalPlans === "string") {
                         finalPlans = JSON.parse(finalPlans);
                       }

@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import Swal from 'sweetalert2';
+import React, { useEffect, useState } from "react";
+import Swal from "sweetalert2";
 
 const ManagerManageLoan = () => {
   const [loans, setLoans] = useState([]);
   const [filteredLoans, setFilteredLoans] = useState([]);
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
 
   const [updateModalOpen, setUpdateModalOpen] = useState(false);
@@ -15,7 +15,7 @@ const ManagerManageLoan = () => {
   useEffect(() => {
     const fetchLoans = async () => {
       try {
-        const res = await fetch('http://localhost:3000/loans');
+        const res = await fetch("http://localhost:3000/loans");
         const data = await res.json();
         setLoans(data);
         setFilteredLoans(data);
@@ -28,45 +28,46 @@ const ManagerManageLoan = () => {
     fetchLoans();
   }, []);
 
-  // Search filter
   useEffect(() => {
     const lower = search.toLowerCase();
     setFilteredLoans(
-      loans.filter(
-        (loan) =>
-          loan.loanTitle.toLowerCase().includes(lower) ||
-          loan.category.toLowerCase().includes(lower)
-      )
+      loans.filter((loan) => {
+       
+        const title = (loan.loanTitle || loan.category || "").toLowerCase();
+        const category = (loan.category || "").toLowerCase();
+
+        return title.includes(lower) || category.includes(lower);
+      }),
     );
   }, [search, loans]);
 
   // Delete loan
   const handleDelete = async (id) => {
     const confirmed = await Swal.fire({
-      title: 'Are you sure?',
-      text: 'This loan will be permanently deleted!',
-      icon: 'warning',
+      title: "Are you sure?",
+      text: "This loan will be permanently deleted!",
+      icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: '#ef4444',
-      cancelButtonColor: '#6b7280',
-      confirmButtonText: 'Yes, delete it!',
+      confirmButtonColor: "#ef4444",
+      cancelButtonColor: "#6b7280",
+      confirmButtonText: "Yes, delete it!",
     });
 
     if (confirmed.isConfirmed) {
       try {
         const res = await fetch(`http://localhost:3000/loans/${id}`, {
-          method: 'DELETE',
-          headers: { 'Content-Type': 'application/json' },
+          method: "DELETE",
+          headers: { "Content-Type": "application/json" },
         });
 
-        if (!res.ok) throw new Error('Failed to delete loan');
+        if (!res.ok) throw new Error("Failed to delete loan");
 
         setLoans(loans.filter((loan) => loan._id !== id));
         setFilteredLoans(filteredLoans.filter((loan) => loan._id !== id));
 
-        Swal.fire('Deleted!', 'Loan has been deleted.', 'success');
+        Swal.fire("Deleted!", "Loan has been deleted.", "success");
       } catch (err) {
-        Swal.fire('Error', err.message, 'error');
+        Swal.fire("Error", err.message, "error");
       }
     }
   };
@@ -82,7 +83,7 @@ const ManagerManageLoan = () => {
     const { name, value } = e.target;
     setSelectedLoan((prev) => {
       let updatedValue = value;
-      if (name === 'interestRate' || name === 'maxLimit') {
+      if (name === "interestRate" || name === "maxLimit") {
         updatedValue = Number(value);
       }
       return { ...prev, [name]: updatedValue };
@@ -95,7 +96,7 @@ const ManagerManageLoan = () => {
     setSelectedLoan((prev) => ({
       ...prev,
       availableEMIPlans: value
-        .split(',')
+        .split(",")
         .map((p) => p.trim())
         .filter((p) => p),
     }));
@@ -109,32 +110,34 @@ const ManagerManageLoan = () => {
     try {
       const { _id, ...updateData } = selectedLoan; // Remove _id from body
       const res = await fetch(`http://localhost:3000/loans/${_id}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(updateData),
       });
 
-      if (!res.ok) throw new Error('Failed to update loan');
+      if (!res.ok) throw new Error("Failed to update loan");
 
       // Update frontend state
       const updatedLoans = loans.map((loan) =>
-        loan._id === _id ? selectedLoan : loan
+        loan._id === _id ? selectedLoan : loan,
       );
       setLoans(updatedLoans);
       setFilteredLoans(updatedLoans);
 
-      Swal.fire('Updated!', 'Loan has been updated.', 'success');
+      Swal.fire("Updated!", "Loan has been updated.", "success");
       setUpdateModalOpen(false);
       setSelectedLoan(null);
     } catch (err) {
-      Swal.fire('Error', err.message, 'error');
+      Swal.fire("Error", err.message, "error");
     } finally {
       setUpdateLoading(false);
     }
   };
 
   if (loading) {
-    return <div className="text-center py-10 text-gray-500">Loading loans...</div>;
+    return (
+      <div className="text-center py-10 text-gray-500">Loading loans...</div>
+    );
   }
 
   return (
@@ -189,12 +192,17 @@ const ManagerManageLoan = () => {
                       </div>
                     )}
                   </td>
-                  <td className="px-4 py-3 font-medium">{loan.loanTitle}</td>
-                  <td className="px-4 py-3">{loan.interestRate}%</td>
+                  <td className="px-4 py-3 font-medium">
+                    {loan.loanTitle || loan.category}
+                  </td>
+                  <td className="px-4 py-3">
+                    {loan.interestRate || loan.interest}
+                  </td>
                   <td className="px-4 py-3">{loan.category}</td>
                   <td className="px-4 py-3">${loan.maxLimit}</td>
                   <td className="px-4 py-3">
-                    {loan.availableEMIPlans?.join(', ')} months
+                    {(loan.availableEMIPlans || loan.emiPlans)?.join(", ")}{" "}
+                    months
                   </td>
                   <td className="px-4 py-3 text-center flex justify-center gap-2">
                     <button
@@ -275,7 +283,7 @@ const ManagerManageLoan = () => {
               <input
                 type="text"
                 name="availableEMIPlans"
-                value={selectedLoan.availableEMIPlans?.join(', ')}
+                value={selectedLoan.availableEMIPlans?.join(", ")}
                 onChange={handleEMIChange}
                 className="w-full px-4 py-2 border rounded-xl"
                 placeholder="EMI Plans (comma separated)"
@@ -294,7 +302,7 @@ const ManagerManageLoan = () => {
                   disabled={updateLoading}
                   className="px-4 py-2 rounded-xl bg-indigo-600 text-white"
                 >
-                  {updateLoading ? 'Updating...' : 'Update'}
+                  {updateLoading ? "Updating..." : "Update"}
                 </button>
               </div>
             </form>
