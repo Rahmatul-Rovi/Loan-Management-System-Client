@@ -157,12 +157,13 @@ const LoanDetails = () => {
               </p>
 
               <p className="mb-3 text-lg">
-                <strong>Interest Rate:</strong> {loan.interestRate}%
+                <strong>Interest Rate:</strong>{" "}
+                {loan.interestRate || loan.interest || "0"}
               </p>
 
               <p className="mb-3 text-lg">
                 <strong>Max Limit:</strong> $
-                {loan.maxLimit.toLocaleString()}
+                {loan?.maxLimit ? loan.maxLimit.toLocaleString() : "0"}
               </p>
 
               <p className="mb-3 text-lg">
@@ -170,18 +171,59 @@ const LoanDetails = () => {
                 {loan.description || "No description available."}
               </p>
 
-              {loan.availableEMIPlans?.length > 0 && (
-                <div className="mt-4">
-                  <strong>Available EMI Plans:</strong>
-                  <ul className="list-disc list-inside mt-2">
-                    {loan.availableEMIPlans.map((plan, i) => (
-                      <li key={i} className="text-lg">
-                        {plan} months
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
+              {/* Check for both field names */}
+              {/* Safe Mapping logic */}
+              {/* Smart EMI Logic: Data string holeo eita array baniye nibe */}
+              {(() => {
+                let rawPlans = loan?.emiPlans || loan?.availableEMIPlans;
+                let finalPlans = [];
+
+                if (rawPlans) {
+                  if (Array.isArray(rawPlans)) {
+                    finalPlans = rawPlans;
+                  } else if (typeof rawPlans === "string") {
+                    try {
+                      // Jodi database theke asha string eibhabe thake: "["60 months"]"
+                      // Tahole eita double parse korle ashol array pawa jay
+                      let cleanStr = rawPlans.trim();
+                      finalPlans = JSON.parse(cleanStr);
+
+                      // Jodi parse korar por-o seta string thake (double quotation er karone)
+                      if (typeof finalPlans === "string") {
+                        finalPlans = JSON.parse(finalPlans);
+                      }
+                    } catch (e) {
+                      // Jodi normal comma separated string hoy: "60, 120"
+                      finalPlans = rawPlans
+                        .split(",")
+                        .map((p) => p.trim().replace(/[\[\]"]/g, ""));
+                    }
+                  }
+                }
+
+                return Array.isArray(finalPlans) && finalPlans.length > 0 ? (
+                  <div className="mt-4">
+                    <strong className="text-lg">Available EMI Plans:</strong>
+                    <ul className="list-disc list-inside mt-2">
+                      {finalPlans.map((plan, i) => (
+                        <li
+                          key={i}
+                          className="text-lg text-gray-500 dark:text-gray-500"
+                        >
+                          {plan}{" "}
+                          {plan.toString().toLowerCase().includes("months")
+                            ? ""
+                            : "months"}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ) : (
+                  <p className="mt-4 italic text-gray-500">
+                    No EMI plans available for this loan.
+                  </p>
+                );
+              })()}
 
               <motion.button
                 whileHover={{ scale: 1.05 }}
