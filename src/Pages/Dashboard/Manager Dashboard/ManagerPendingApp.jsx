@@ -34,46 +34,72 @@ const ManagerPendingApp = () => {
 
   // Approve loan
   const handleApprove = async (id) => {
-    try {
-      const res = await fetch(
-        `http://localhost:3000/applications/${id}/approve`,
-        {
+  Swal.fire({
+    title: "Are you sure?",
+    text: "You want to approve this loan application!",
+    icon: "question",
+    showCancelButton: true,
+    confirmButtonColor: "#16a34a", // Green
+    cancelButtonColor: "#6b7280",
+    confirmButtonText: "Yes, Approve it!"
+  }).then(async (result) => {
+    if (result.isConfirmed) {
+      try {
+        const res = await fetch(`http://localhost:3000/applications/${id}/approve`, {
           method: 'PATCH',
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      if (!res.ok) throw new Error('Failed to approve application');
-
-      Swal.fire('Approved!', 'Loan has been approved.', 'success');
-      setApplications(applications.filter(app => app._id !== id));
-    } catch (err) {
-      Swal.fire('Error', err.message, 'error');
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        if (!res.ok) throw new Error('Failed');
+        
+        setApplications(prev => prev.map(app => app._id === id ? {...app, status: 'approved'} : app));
+        Swal.fire("Approved!", "Loan has been approved successfully.", "success");
+      } catch (err) {
+        Swal.fire("Error", "Something went wrong!", "error");
+      }
     }
-  };
+  });
+};
 
   // Reject loan
+ // Reject loan with SweetAlert2 Confirmation
   const handleReject = async (id) => {
-    try {
-      const res = await fetch(
-        `http://localhost:3000/applications/${id}/reject`,
-        {
-          method: 'PATCH',
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You are about to reject this loan application!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33', // Red color for reject
+      cancelButtonColor: '#6b7280',
+      confirmButtonText: 'Yes, Reject it!',
+      cancelButtonText: 'No, Keep it'
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          const res = await fetch(
+            `http://localhost:3000/applications/${id}/reject`,
+            {
+              method: 'PATCH',
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+
+          if (!res.ok) throw new Error('Failed to reject application');
+
+          // UI update
+          setApplications(applications.filter(app => app._id !== id));
+          
+          Swal.fire(
+            'Rejected!',
+            'The application has been rejected.',
+            'error' 
+          );
+        } catch (err) {
+          Swal.fire('Error', err.message, 'error');
         }
-      );
-
-      if (!res.ok) throw new Error('Failed to reject application');
-
-      Swal.fire('Rejected', 'Loan has been rejected.', 'info');
-      setApplications(applications.filter(app => app._id !== id));
-    } catch (err) {
-      Swal.fire('Error', err.message, 'error');
-    }
+      }
+    });
   };
 
   if (loading) {
@@ -84,12 +110,41 @@ const ManagerPendingApp = () => {
     );
   }
 
+const stats = {
+  total: applications.length,
+  pending: applications.filter(app => app.status === 'pending').length,
+  approved: applications.filter(app => app.status === 'approved').length,
+  totalAmount: applications.reduce((sum, app) => sum + Number(app.loanAmount || 0), 0)
+};
+
   return (
     <div className="p-6 text-black">
       <h2 className="text-2xl font-bold mb-4 text-gray-800">
         Pending Loan Applications
       </h2>
 
+    <div className="p-6 text-black">
+    <h2 className="text-2xl font-bold mb-6 text-gray-800">Manager Overview</h2>
+    
+    {/* Summary Cards */}
+    <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+      <div className="bg-blue-50 p-5 rounded-2xl border border-blue-100 shadow-sm">
+        <p className="text-blue-600 text-sm font-semibold uppercase">Total Applications</p>
+        <p className="text-3xl font-bold">{stats.total}</p>
+      </div>
+      <div className="bg-yellow-50 p-5 rounded-2xl border border-yellow-100 shadow-sm">
+        <p className="text-yellow-600 text-sm font-semibold uppercase">Pending Loans</p>
+        <p className="text-3xl font-bold">{stats.pending}</p>
+      </div>
+      <div className="bg-green-50 p-5 rounded-2xl border border-green-100 shadow-sm">
+        <p className="text-green-600 text-sm font-semibold uppercase">Approved Loans</p>
+        <p className="text-3xl font-bold">{stats.approved}</p>
+      </div>
+      <div className="bg-purple-50 p-5 rounded-2xl border border-purple-100 shadow-sm">
+        <p className="text-purple-600 text-sm font-semibold uppercase">Total Loan Volume</p>
+        <p className="text-3xl font-bold">${stats.totalAmount.toLocaleString()}</p>
+      </div>
+    </div>
       <div className="overflow-x-auto bg-white shadow-lg rounded-2xl">
         <table className="min-w-full text-sm">
           <thead className="bg-gray-100 text-gray-700">
@@ -189,6 +244,7 @@ const ManagerPendingApp = () => {
           </div>
         </div>
       )}
+    </div>
     </div>
   );
 };
