@@ -50,6 +50,19 @@ const AdminAllLoan = () => {
     });
   };
 
+  const handleSendMoney = async (loanId) => {
+  const res = await fetch(`http://localhost:3000/payment/admin/send/${loanId}`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  const data = await res.json();
+  window.location.href = data.url;
+};
+
+
   // Open modal
   const handleEdit = (loan) => {
     setSelectedLoan(loan);
@@ -175,6 +188,14 @@ const AdminAllLoan = () => {
                   >
                     Approve & Send Loan
                   </button>
+
+                  <button
+  onClick={() => handleSendMoney(loan._id)}
+  className="bg-blue-600 text-white px-3 py-1 rounded"
+>
+  Send Money (Stripe)
+</button>
+
 
                   <button
                     className="btn btn-sm bg-red-600 text-white"
