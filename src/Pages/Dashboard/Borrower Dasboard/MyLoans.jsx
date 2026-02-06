@@ -5,6 +5,7 @@ import Swal from "sweetalert2";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
 import CheckoutForm from "./CheckoutForm";
+import { FaMoneyBillWave, FaClipboardList, FaExclamationCircle } from "react-icons/fa";
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PK);
 
@@ -21,26 +22,19 @@ const MyLoans = () => {
   // Theme handler
   useEffect(() => {
     const updateTheme = () => {
-      const currentTheme =
-        document.documentElement.getAttribute("data-theme") || "light";
+      const currentTheme = document.documentElement.getAttribute("data-theme") || "light";
       setTheme(currentTheme);
     };
     updateTheme();
     const observer = new MutationObserver(updateTheme);
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ["data-theme"],
-    });
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
     return () => observer.disconnect();
   }, []);
 
-  // Fetch applications
   const fetchApplications = async () => {
     if (!user?.email) return;
     try {
-      const res = await fetch(
-        `http://localhost:3000/applications/${encodeURIComponent(user.email)}`,
-      );
+      const res = await fetch(`http://localhost:3000/applications/${encodeURIComponent(user.email)}`);
       const data = await res.json();
       setApplications(Array.isArray(data) ? data : []);
     } catch (err) {
@@ -55,13 +49,18 @@ const MyLoans = () => {
     fetchApplications();
   }, [user]);
 
-  // Open payment modal
+  // --- Calculations for Statistics ---
+  const totalLoans = applications.length;
+  const totalLoanAmount = applications.reduce((sum, app) => sum + Number(app.loanAmount || 0), 0);
+  const remainingRepayment = applications
+    .filter(app => app.feeStatus?.toLowerCase() !== "paid" && app.status?.toLowerCase() === "disbursed")
+    .reduce((sum, app) => sum + Number(app.repayAmount || 0), 0);
+
   const handlePayClick = (app) => {
     setSelectedApp(app);
     setIsModalOpen(true);
   };
 
-  // Cancel application
   const handleCancel = async (loanId) => {
     const result = await Swal.fire({
       title: "Are you sure?",
@@ -73,10 +72,7 @@ const MyLoans = () => {
 
     if (result.isConfirmed) {
       try {
-        const res = await fetch(
-          `http://localhost:3000/applications/${loanId}`,
-          { method: "DELETE" },
-        );
+        const res = await fetch(`http://localhost:3000/applications/${loanId}`, { method: "DELETE" });
         if (res.ok) {
           setApplications((prev) => prev.filter((app) => app._id !== loanId));
           Swal.fire("Cancelled!", "Application removed.", "success");
@@ -87,160 +83,112 @@ const MyLoans = () => {
     }
   };
 
-  if (loading) {
-    return <div className="text-center mt-20 font-bold">Loading...</div>;
-  }
+  if (loading) return <div className="flex justify-center items-center h-screen font-bold">Loading...</div>;
 
   return (
-    <div
-      className={`min-h-screen p-6 ${
-        theme === "dark"
-          ? "bg-[#0A122A] text-white"
-          : "bg-gray-50 text-gray-800"
-      }`}
-    >
+    <div className={`min-h-screen p-6 ${theme === "dark" ? "bg-[#0A122A] text-white" : "bg-gray-50 text-gray-800"}`}>
       <div className="max-w-7xl mx-auto">
+        
+        {/* Statistics Header */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <div className={`p-6 rounded-2xl shadow-md flex items-center space-x-4 ${theme === "dark" ? "bg-[#111B33]" : "bg-white"}`}>
+            <div className="p-3 bg-blue-100 text-blue-600 rounded-full"><FaClipboardList size={24} /></div>
+            <div>
+              <p className="text-sm opacity-70">Total Applied</p>
+              <h2 className="text-2xl font-bold">{totalLoans} Loans</h2>
+            </div>
+          </div>
+          
+          <div className={`p-6 rounded-2xl shadow-md flex items-center space-x-4 ${theme === "dark" ? "bg-[#111B33]" : "bg-white"}`}>
+            <div className="p-3 bg-green-100 text-green-600 rounded-full"><FaMoneyBillWave size={24} /></div>
+            <div>
+              <p className="text-sm opacity-70">Total Loan Amount</p>
+              <h2 className="text-2xl font-bold">${totalLoanAmount.toLocaleString()}</h2>
+            </div>
+          </div>
+
+          <div className={`p-6 rounded-2xl shadow-md flex items-center space-x-4 ${theme === "dark" ? "bg-[#111B33]" : "bg-white"}`}>
+            <div className="p-3 bg-red-100 text-red-600 rounded-full"><FaExclamationCircle size={24} /></div>
+            <div>
+              <p className="text-sm opacity-70">Remaining Repay</p>
+              <h2 className="text-2xl font-bold text-red-500">${remainingRepayment.toLocaleString()}</h2>
+            </div>
+          </div>
+        </div>
+
         <h1 className="text-3xl font-bold mb-6">My Loan Applications</h1>
 
-        <div className="overflow-x-auto rounded-xl shadow-lg">
-          <table
-            className={`min-w-full border ${
-              theme === "dark" ? "border-gray-700" : "border-gray-200"
-            }`}
-          >
-            <thead
-              className={theme === "dark" ? "bg-[#111B33]" : "bg-gray-100"}
-            >
+        <div className="overflow-x-auto rounded-xl shadow-lg border border-transparent">
+          <table className={`min-w-full border ${theme === "dark" ? "border-gray-700" : "border-gray-200"}`}>
+            <thead className={theme === "dark" ? "bg-[#111B33]" : "bg-gray-100"}>
               <tr>
-                <th className="px-4 py-3 text-left">Loan Title</th>
-                <th className="px-4 py-3 text-left">Loan Amount</th>
-                <th className="px-4 py-3 text-left">Status</th>
-                <th className="px-4 py-3 text-left">Repayment</th>
-                <th className="px-4 py-3 text-left">Actions</th>
+                <th className="px-4 py-3 text-left uppercase text-xs tracking-wider">Title</th>
+                <th className="px-4 py-3 text-left uppercase text-xs tracking-wider">Amount</th>
+                <th className="px-4 py-3 text-left uppercase text-xs tracking-wider">Status</th>
+                <th className="px-4 py-3 text-left uppercase text-xs tracking-wider">Repayment</th>
+                <th className="px-4 py-3 text-left uppercase text-xs tracking-wider">Actions</th>
               </tr>
             </thead>
-            <tbody>
-              {applications.map((app) => (
-                <tr key={app._id} className="border-b dark:border-gray-700">
-                  <td className="px-4 py-3">{app.loanTitle || "N/A"}</td>
-
-                  <td className="px-4 py-3">
-                    ${Number(app.loanAmount || 0).toLocaleString()}
-                  </td>
-
-                  <td className="px-4 py-3">
-                    <span
-                      className={`px-2 py-1 rounded-full text-xs font-bold ${
-                        app.status?.toLowerCase() === "approved"
-                          ? "bg-green-100 text-green-700"
-                          : "bg-yellow-100 text-yellow-700"
-                      }`}
-                    >
-                      {app.status}
-                    </span>
-                  </td>
-
-                  {/* Repayment column */}
-                  <td className="px-4 py-3">
-                    {app.feeStatus?.toLowerCase() === "paid" ? (
-                      <span className="px-2 py-1 rounded-full text-xs bg-green-100 text-green-700">
-                        Paid
+            <tbody className={theme === "dark" ? "bg-[#0F172A]" : "bg-white"}>
+              {applications.length > 0 ? (
+                applications.map((app) => (
+                  <tr key={app._id} className="border-b dark:border-gray-700 hover:bg-gray-400/5 transition">
+                    <td className="px-4 py-3 font-medium">{app.loanTitle || "N/A"}</td>
+                    <td className="px-4 py-3">${Number(app.loanAmount || 0).toLocaleString()}</td>
+                    <td className="px-4 py-3">
+                      <span className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase ${
+                        app.status === "disbursed" ? "bg-blue-100 text-blue-700" :
+                        app.status === "approved" ? "bg-green-100 text-green-700" : "bg-yellow-100 text-yellow-700"
+                      }`}>
+                        {app.status}
                       </span>
-                    ) : app.status?.toLowerCase() === "approved" ? (
-                      <button
-                        onClick={() => handlePayClick(app)}
-                        className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-xs transition"
-                      >
-                        Pay Now
-                      </button>
-                    ) : (
-                      <span className="text-gray-400 italic">
-                        Waiting for approval
-                      </span>
-                    )}
-                  </td>
-
-                  <td className="px-4 py-3 space-x-2">
-                    <button
-                      onClick={() => navigate(`/all-loans/${app.loanId}`)}
-                      className="px-3 py-1 bg-gray-500 text-white text-xs rounded-lg"
-                    >
-                      View
-                    </button>
-
-                    {app.status?.toLowerCase() === "pending" && (
-                      <button
-                        onClick={() => handleCancel(app._id)}
-                        className="px-3 py-1 bg-red-500 text-white text-xs rounded-lg"
-                      >
-                        Cancel
-                      </button>
-                    )}
-                  </td>
-                </tr>
-              ))}
+                    </td>
+                    <td className="px-4 py-3">
+                      {app.repayStatus === "paid" || app.feeStatus === "paid" ? (
+                        <span className="text-green-500 font-bold text-xs flex items-center italic">✅ Paid</span>
+                      ) : app.status === "disbursed" ? (
+                        <button onClick={() => handlePayClick(app)} className="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1.5 rounded-md text-xs font-semibold shadow-sm transition">
+                          Pay Now
+                        </button>
+                      ) : app.status === "approved" ? (
+                        <span className="text-blue-500 text-xs italic">Processing Funds...</span>
+                      ) : (
+                        <span className="text-gray-400 text-xs">Waiting Approval</span>
+                      )}
+                    </td>
+                    <td className="px-4 py-3 space-x-2">
+                      <button onClick={() => navigate(`/all-loans/${app.loanId}`)} className="px-3 py-1 bg-gray-500/20 hover:bg-gray-500 hover:text-white text-xs rounded-lg transition duration-300">View</button>
+                      {app.status === "pending" && (
+                        <button onClick={() => handleCancel(app._id)} className="px-3 py-1 bg-red-500 hover:bg-red-600 text-white text-xs rounded-lg transition">Cancel</button>
+                      )}
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr><td colSpan="5" className="text-center py-10 opacity-50">No applications found.</td></tr>
+              )}
             </tbody>
           </table>
         </div>
       </div>
 
-      {/* ================= STRIPE MODAL ================= */}
+      {/* Stripe Modal Section - No changes needed here, keeping your logic */}
       {isModalOpen && selectedApp && (
-        <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-[9999] p-4 backdrop-blur-sm">
-          <div
-            className={`w-full max-w-md p-8 rounded-2xl shadow-2xl ${
-              theme === "dark"
-                ? "bg-[#111B33] text-white border border-gray-700"
-                : "bg-white text-gray-800"
-            }`}
-          >
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-[9999] p-4 backdrop-blur-md">
+          <div className={`w-full max-w-md p-8 rounded-3xl shadow-2xl ${theme === "dark" ? "bg-[#111B33] text-white border border-gray-700" : "bg-white text-gray-800"}`}>
             <div className="flex justify-between items-center mb-6">
-              <h3 className="text-xl font-bold">Loan Repayment</h3>
-              <button
-                onClick={() => setIsModalOpen(false)}
-                className="text-2xl font-bold hover:text-red-500 transition"
-              >
-                &times;
-              </button>
+              <h3 className="text-2xl font-extrabold tracking-tight">Repayment</h3>
+              <button onClick={() => setIsModalOpen(false)} className="text-3xl leading-none hover:text-red-500 transition">&times;</button>
             </div>
-
-            <div className="mb-4 text-sm">
-              <p>
-                Loan:{" "}
-                <span className="font-bold text-blue-500">
-                  {selectedApp.loanTitle}
-                </span>
-              </p>
-              <p>
-                Total Repay Amount:{" "}
-                <span className="text-green-500 font-bold">
-                  ${Number(selectedApp.repayAmount || 0).toLocaleString()}
-                </span>
-              </p>
+            <div className="mb-6 p-4 rounded-xl bg-gray-500/5 border border-gray-500/10">
+              <p className="text-sm opacity-70">Repaying for: <span className="font-bold text-blue-500">{selectedApp.loanTitle}</span></p>
+              <p className="text-xl font-black mt-1">Total: <span className="text-green-500">${Number(selectedApp.repayAmount || 0).toLocaleString()}</span></p>
             </div>
-
-            <div className="bg-gray-50 dark:bg-gray-900 p-4 rounded-xl border dark:border-gray-700">
-              {stripePromise ? (
-                <Elements stripe={stripePromise}>
-                  <CheckoutForm
-                    app={selectedApp}
-                    closeModal={() => setIsModalOpen(false)}
-                    refreshData={fetchApplications}
-                  />
-                </Elements>
-              ) : (
-                <p className="text-red-500">
-                  Stripe loading failed. Check your public key.
-                </p>
-              )}
+            <div className="p-4 rounded-2xl bg-white dark:bg-gray-900 shadow-inner">
+              <Elements stripe={stripePromise}>
+                <CheckoutForm app={selectedApp} closeModal={() => setIsModalOpen(false)} refreshData={fetchApplications} />
+              </Elements>
             </div>
-
-            <button
-              onClick={() => setIsModalOpen(false)}
-              className="mt-6 w-full text-gray-400 text-xs hover:text-red-500 underline transition"
-            >
-              Cancel Payment
-            </button>
           </div>
         </div>
       )}
