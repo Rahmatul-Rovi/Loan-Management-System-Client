@@ -24,6 +24,7 @@ import BorrowerProfile from '../Pages/Dashboard/Borrower Dasboard/BorrowerProfil
 import MyLoans from './../Pages/Dashboard/Borrower Dasboard/MyLoans';
 import ErrorPage from '../Shared/ErrorPage/ErrorPage';
 import PaymentHistory from '../Pages/Dashboard/Borrower Dasboard/PaymentHistory/PaymentHistory';
+import AdminChart from '../Pages/Dashboard/Manager Dashboard/AdminChart';
 
 export const router = createBrowserRouter([
   {
@@ -73,6 +74,7 @@ export const router = createBrowserRouter([
           { path: 'manage-users', element: <ManageUser /> },
           { path: 'all-loans', element: <AdminAllLoan /> },
           { path: 'loan-applications', element: <AdminLoanApply /> },
+         
         ],
       },
 
@@ -99,6 +101,7 @@ export const router = createBrowserRouter([
             path: 'manager-profile',
             element: <ManagerProfile></ManagerProfile>,
           },
+           {path: 'admin-stats', element: <AdminChart></AdminChart>},
         ],
       },
     ],

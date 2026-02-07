@@ -14,6 +14,7 @@ import {
   FaPlus,
   FaFileAlt,
   FaAngleDown,
+  FaChartBar,
 } from 'react-icons/fa';
 import { signOut } from 'firebase/auth';
 import { auth } from '../../../Firebase.init';
@@ -89,6 +90,11 @@ const Manager = () => {
       label: 'Profile',
       icon: <FaUserCircle />,
     },
+    {
+  path: '/dashboard/manager/admin-stats', // অথবা আপনার পছন্দমতো পাথ
+  label: 'Analytics',
+  icon: <FaChartBar />, // এটি ইমপোর্ট করে নিতে হবে FaChartBar
+},
   ];
 
   return (
