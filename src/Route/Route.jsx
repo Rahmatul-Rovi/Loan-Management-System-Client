@@ -23,6 +23,7 @@ import Borrower from './../Pages/Dashboard/Borrower Dasboard/Borrower';
 import BorrowerProfile from '../Pages/Dashboard/Borrower Dasboard/BorrowerProfile';
 import MyLoans from './../Pages/Dashboard/Borrower Dasboard/MyLoans';
 import ErrorPage from '../Shared/ErrorPage/ErrorPage';
+import PaymentHistory from '../Pages/Dashboard/Borrower Dasboard/PaymentHistory/PaymentHistory';
 
 export const router = createBrowserRouter([
   {
@@ -53,6 +54,12 @@ export const router = createBrowserRouter([
     path: '/borrower-profile',
     element: <BorrowerProfile></BorrowerProfile>,
   },
+  
+    {
+  path: "payment-history",
+  Component: PaymentHistory
+},
+
 
   {
     path: '/dashboard',

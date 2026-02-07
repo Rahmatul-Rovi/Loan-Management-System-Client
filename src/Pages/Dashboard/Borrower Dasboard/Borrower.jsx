@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { FaUser, FaMoneyCheckAlt, FaAngleDown, FaTimes } from 'react-icons/fa';
+import { FaUser, FaMoneyCheckAlt, FaAngleDown, FaTimes, FaHistory } from 'react-icons/fa';
 import Navbar from '../../../Shared/Navbar/Navbar';
 import Footer from '../../../Shared/Footer/Footer';
 import BorrowerProfile from './BorrowerProfile';
 import MyLoans from './MyLoans';
 import { AuthContext } from '../../../Auth/AuthContext';
+import PaymentHistory from './PaymentHistory/PaymentHistory';
 
 const Borrower = () => {
   const { user } = useContext(AuthContext);
@@ -43,6 +44,7 @@ const Borrower = () => {
   const borrowerChildren = [
     { key: 'profile', label: 'Profile', icon: <FaUser /> },
     { key: 'my-loans', label: 'My Loans', icon: <FaMoneyCheckAlt /> },
+    { key: 'payment-history', label: 'Payment History', icon: <FaHistory /> },
   ];
 
   const bgClass = theme === 'dark' ? 'bg-gray-900' : 'bg-gray-50';
@@ -161,6 +163,7 @@ const Borrower = () => {
         <main className="flex-1 overflow-auto p-6">
           {activePage === 'profile' && <BorrowerProfile theme={theme} />}
           {activePage === 'my-loans' && <MyLoans theme={theme} />}
+          {activePage === 'payment-history' && <PaymentHistory theme={theme} />}
         </main>
 
         {/* Footer */}

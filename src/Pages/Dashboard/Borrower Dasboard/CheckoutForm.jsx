@@ -8,12 +8,12 @@ const CheckoutForm = ({ app, closeModal, refreshData }) => {
   const [clientSecret, setClientSecret] = useState("");
   const [processing, setProcessing] = useState(false);
 
-  // ✅ FIX: Changed loanAmount to repayAmount to include interest
+  //  FIX: Changed loanAmount to repayAmount to include interest
   const amountToPay = app?.repayAmount || 0; 
 
   useEffect(() => {
     if (amountToPay > 0) {
-      // ✅ Log checking: See if it's sending 66300 in console
+      //  Log checking: See if it's sending 66300 in console
       console.log("Creating Payment Intent for:", amountToPay);
 
       fetch("http://localhost:3000/create-payment-intent", {
@@ -42,7 +42,7 @@ const CheckoutForm = ({ app, closeModal, refreshData }) => {
       payment_method: {
         card,
         billing_details: {
-          name: app?.fullName || "Borrower", // fullName use kora better
+          name: app?.fullName || "Borrower", 
           email: app?.borrowerEmail || "test@mail.com",
         },
       },
@@ -54,19 +54,26 @@ const CheckoutForm = ({ app, closeModal, refreshData }) => {
       return;
     }
 
-    if (paymentIntent.status === "succeeded") {
-      // Payment success backend update
-      await fetch(`http://localhost:3000/applications/pay/${app._id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" }
-      });
-
-      Swal.fire("Success", `Amount of $${amountToPay.toLocaleString()} repaid successfully!`, "success");
-      closeModal();
-      refreshData();
-      setProcessing(false);
-    }
+   // Inside handleSubmit function after paymentIntent.status === "succeeded"
+if (paymentIntent.status === "succeeded") {
+  const paymentInfo = {
+    transactionId: paymentIntent.id,
+    amount: amountToPay,
+    email: app?.borrowerEmail,
   };
+
+  // Call the update API with payment details
+  await fetch(`http://localhost:3000/applications/pay/${app._id}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(paymentInfo), // Passing the data to backend
+  });
+
+  Swal.fire("Success", `Payment ID: ${paymentIntent.id}`, "success");
+  closeModal();
+  refreshData();
+}
+  }
 
   return (
     <form onSubmit={handleSubmit}>
