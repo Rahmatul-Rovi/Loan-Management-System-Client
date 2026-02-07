@@ -12,7 +12,7 @@ const PaymentSuccess = () => {
     })
       .then(() => {
         Swal.fire("Success", "Payment completed successfully!", "success");
-        navigate("/dashboard/my-loans");
+        navigate("/my-loans");
       })
       .catch(() => {
         Swal.fire("Error", "Failed to update payment status", "error");

@@ -43,15 +43,15 @@ const Admin = () => {
   }, []);
 
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
-  const handleLogout = () => {
-    localStorage.clear();
-    try {
-          signOut(auth);
-          navigate('/login', { replace: true });
-        } catch (err) {
-          console.error('Logout failed:', err);
-        }
-  };
+  const handleLogout = async () => {
+  localStorage.clear();
+  try {
+    await signOut(auth);
+    navigate('/login', { replace: true });
+  } catch (err) {
+    console.error('Logout failed:', err);
+  }
+};
 
   if (!user || user.role !== 'admin') {
     return (

@@ -27,25 +27,40 @@ const ManageUser = () => {
   }, [token]);
 
   // Update role
-  const handleUpdateRole = (userId, newRole) => {
-    fetch(`http://localhost:3000/users/${userId}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-      body: JSON.stringify({ role: newRole }),
+ // Update role
+const handleUpdateRole = (userId, newRole) => {
+  fetch(`http://localhost:3000/users/${userId}`, {
+    method: "PATCH",
+    headers: { 
+      "Content-Type": "application/json", 
+      Authorization: `Bearer ${token}` 
+    },
+    body: JSON.stringify({ role: newRole }),
+  })
+    .then((res) => {
+      // যদি রেসপন্স ২০০-২৯৯ এর বাইরে হয় (যেমন ৪0১ বা ৪0৩)
+      if (!res.ok) throw new Error("Failed to update"); 
+      return res.json();
     })
-      .then((res) => res.json())
-      .then(() => {
-        Swal.fire({
-          icon: "success",
-          title: "Role Updated",
-          text: `User role changed to ${newRole}`,
-        });
-        setUsers((prev) =>
-          prev.map((u) => (u._id === userId ? { ...u, role: newRole } : u))
-        );
-      })
-      .catch((err) => console.error(err));
-  };
+    .then((data) => {
+      // সার্ভার ডাটা পাঠালে তবেই সাকসেস মেসেজ দিন
+      Swal.fire({
+        icon: "success",
+        title: "Role Updated",
+        text: `User role changed to ${newRole}`,
+      });
+      
+      // UI আপডেট করুন
+      setUsers((prev) =>
+        prev.map((u) => (u._id === userId ? { ...u, role: newRole } : u))
+      );
+    })
+    .catch((err) => {
+      // কোনো এরর হলে এখানে আসবে
+      Swal.fire("Error", "Could not update role. Try again!", "error");
+      console.error(err);
+    });
+};
 
   // Handle suspend
   const handleSuspend = (userId, name) => {

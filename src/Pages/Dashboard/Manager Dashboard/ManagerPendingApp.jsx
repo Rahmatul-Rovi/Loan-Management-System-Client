@@ -124,25 +124,47 @@ const ManagerPendingApp = () => {
   };
 
   // Stripe Disbursement
+  // Stripe Disbursement (Updated with Error Handling)
   const handleSendMoney = async (app) => {
     const result = await Swal.fire({
-      title: "Disburse Loan?",
-      text: `Send $${app.loanAmount} to ${app.fullName}?`,
-      icon: "warning",
+      title: "Confirm Disbursement?",
+      text: `Are you sure you want to disburse $${app.loanAmount} to ${app.fullName}?`,
+      icon: "question",
       showCancelButton: true,
       confirmButtonText: "Yes, Send Money",
-      cancelButtonText: "Cancel",
+      confirmButtonColor: "#2563eb",
     });
 
     if (!result.isConfirmed) return;
 
-    const res = await fetch(
-      `http://localhost:3000/payment/admin/send/${app._id}`,
-      { method: "POST" }
-    );
+    // Loading State start
+    Swal.fire({
+      title: 'Processing Payment...',
+      allowOutsideClick: false,
+      didOpen: () => { Swal.showLoading(); }
+    });
 
-    const data = await res.json();
-    window.location.href = data.url;
+    try {
+      const res = await fetch(`http://localhost:3000/payment/admin/send/${app._id}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, // টোকেন পাঠানো জরুরি
+        },
+      });
+
+      const data = await res.json();
+
+      if (data.url) {
+        // যদি স্ট্রাইপ ইউআরএল আসে, সেখানে পাঠানোর আগে নিশ্চিত করুন সাকসেস ইউআরএল ঠিক আছে
+        window.location.href = data.url;
+      } else {
+        throw new Error("Payment URL not found");
+      }
+    } catch (err) {
+      console.error("Disbursement Error:", err);
+      Swal.fire("Error", "Payment failed or Admin Session Expired", "error");
+    }
   };
 
   if (loading) {

@@ -1,20 +1,20 @@
-import React, { useEffect, useState } from 'react';
-import Swal from 'sweetalert2';
+import React, { useEffect, useState } from "react";
+import Swal from "sweetalert2";
 
 const AdminLoanApply = () => {
   const [applications, setApplications] = useState([]);
   const [filteredApps, setFilteredApps] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [statusFilter, setStatusFilter] = useState('All');
+  const [statusFilter, setStatusFilter] = useState("All");
   const [selectedApp, setSelectedApp] = useState(null);
 
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem("token");
 
   // Fetch applications
   useEffect(() => {
     if (!token) return;
 
-    fetch('http://localhost:3000/applications', {
+    fetch("http://localhost:3000/applications", {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -35,17 +35,20 @@ const AdminLoanApply = () => {
         setApplications([]);
         setFilteredApps([]);
         setLoading(false);
-        Swal.fire('Error', 'Failed to fetch applications', 'error');
+        Swal.fire("Error", "Failed to fetch applications", "error");
       });
   }, [token]);
 
   // Filter applications by status
   useEffect(() => {
-    if (statusFilter === 'All') {
+    if (statusFilter === "All") {
       setFilteredApps(applications);
     } else {
       setFilteredApps(
-        applications.filter((app) => app.status === statusFilter)
+        // Filter logic
+        applications.filter(
+          (app) => app.status.toLowerCase() === statusFilter.toLowerCase(),
+        ),
       );
     }
   }, [statusFilter, applications]);
@@ -53,9 +56,9 @@ const AdminLoanApply = () => {
   // Update application status
   const handleStatusChange = (appId, newStatus) => {
     fetch(`http://localhost:3000/applications/${appId}`, {
-      method: 'PATCH',
+      method: "PATCH",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({ status: newStatus }),
@@ -63,16 +66,16 @@ const AdminLoanApply = () => {
       .then((res) => res.json())
       .then((updatedApp) => {
         setApplications((prev) =>
-          prev.map((app) => (app._id === appId ? updatedApp : app))
+          prev.map((app) => (app._id === appId ? updatedApp : app)),
         );
-        Swal.fire('Success', `Application ${newStatus}`, 'success');
+        Swal.fire("Success", `Application ${newStatus}`, "success");
         setSelectedApp((prev) =>
-          prev && prev._id === appId ? updatedApp : prev
+          prev && prev._id === appId ? updatedApp : prev,
         );
       })
       .catch((err) => {
         console.error(err);
-        Swal.fire('Error', 'Failed to update status', 'error');
+        Swal.fire("Error", "Failed to update status", "error");
       });
   };
 
@@ -141,11 +144,11 @@ const AdminLoanApply = () => {
                   <td className="px-4 py-3">
                     <span
                       className={`px-2 py-1 rounded-full text-xs font-semibold ${
-                        app.status === 'Pending'
-                          ? 'bg-yellow-100 text-yellow-700'
-                          : app.status === 'approved'
-                          ? 'bg-green-100 text-green-700'
-                          : 'bg-red-100 text-red-700'
+                        app.status === "Pending"
+                          ? "bg-yellow-100 text-yellow-700"
+                          : app.status === "approved"
+                            ? "bg-green-100 text-green-700"
+                            : "bg-red-100 text-red-700"
                       }`}
                     >
                       {app.status}
@@ -206,16 +209,16 @@ const AdminLoanApply = () => {
               <strong>Reason:</strong> {selectedApp.reason}
             </p>
             <p>
-              <strong>Applied Date:</strong>{' '}
+              <strong>Applied Date:</strong>{" "}
               {new Date(selectedApp.date).toLocaleString()}
             </p>
 
             {/* Approve/Reject Buttons */}
-            {selectedApp.status === 'Pending' && (
+            {selectedApp.status === "Pending" && (
               <div className="flex gap-2 mt-3">
                 <button
                   onClick={() =>
-                    handleStatusChange(selectedApp._id, 'approved')
+                    handleStatusChange(selectedApp._id, "approved")
                   }
                   className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
                 >
@@ -223,7 +226,7 @@ const AdminLoanApply = () => {
                 </button>
                 <button
                   onClick={() =>
-                    handleStatusChange(selectedApp._id, 'Rejected')
+                    handleStatusChange(selectedApp._id, "Rejected")
                   }
                   className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
                 >
