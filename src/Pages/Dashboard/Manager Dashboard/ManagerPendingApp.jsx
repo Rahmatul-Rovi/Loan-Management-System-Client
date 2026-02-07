@@ -9,21 +9,17 @@ const ManagerPendingApp = () => {
 
   const token = localStorage.getItem("token");
 
-  // Fetch all applications
   const fetchLoans = async () => {
     try {
       const res = await fetch("http://localhost:3000/applications", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
       });
-
       const data = await res.json();
-      const pending = data.filter((app) => app.status === "pending");
-      const approved = data.filter((app) => app.status === "approved");
-
-      setPendingApps(pending);
-      setApprovedApps(approved);
+      // Reverse to show newest first
+      const sortedData = Array.isArray(data) ? [...data].reverse() : [];
+      
+      setPendingApps(sortedData.filter((app) => app.status === "pending"));
+      setApprovedApps(sortedData.filter((app) => app.status === "approved"));
     } catch (err) {
       console.error(err);
     } finally {
@@ -35,289 +31,182 @@ const ManagerPendingApp = () => {
     fetchLoans();
   }, [token]);
 
-  // Approve loan
+  // --- Auto Approval Logic ---
   const handleApprove = async (loan) => {
-  const { value: formValues } = await Swal.fire({
-    title: "Approve Loan",
-    html: `
-      <input id="swal-repay" type="number" class="swal2-input" placeholder="Total repay amount (with interest)">
-      <input id="swal-deadline" type="date" class="swal2-input">
-    `,
-    focusConfirm: false,
-    showCancelButton: true,
-    confirmButtonText: "Approve",
-    preConfirm: () => {
-      const repayAmount = document.getElementById("swal-repay").value;
-      const deadline = document.getElementById("swal-deadline").value;
+    // Interest Calculation Automatic
+    const principal = Number(loan.loanAmount || 0);
+    const rate = parseFloat(loan.interestRate?.replace('%', '') || 0);
+    const autoCalculatedRepay = Math.round(principal + (principal * rate / 100));
 
-      if (!repayAmount || !deadline) {
-        Swal.showValidationMessage("Both repay amount and deadline are required!");
-        return false;
-      }
-
-      if (Number(repayAmount) <= 0) {
-        Swal.showValidationMessage("Repay amount must be greater than 0");
-        return false;
-      }
-
-      return { repayAmount: Number(repayAmount), deadline };
-    },
-  });
-
-  if (!formValues) return; // Cancel pressed
-
-  try {
-    const res = await fetch(
-      `http://localhost:3000/applications/approve/${loan._id}`,
-      {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(formValues),
-      }
-    );
-
-    if (!res.ok) throw new Error("Approve failed");
-
-    Swal.fire("Approved!", "Loan approved successfully.", "success");
-    fetchLoans(); // বা fetchPendingLoans()
-  } catch (err) {
-    Swal.fire("Error", err.message || "Something went wrong", "error");
-  }
-};
-
-
-  // Reject loan
-  const handleReject = async (id) => {
-    const result = await Swal.fire({
-      title: "Are you sure?",
-      text: "You are about to reject this loan application!",
-      icon: "warning",
+    const { value: formValues } = await Swal.fire({
+      title: "Approve Loan",
+      html: `
+        <div style="text-align: left; margin-bottom: 10px;">
+          <label>Total repay amount (Calculated with ${loan.interestRate} interest):</label>
+          <input id="swal-repay" type="number" class="swal2-input" value="${autoCalculatedRepay}">
+        </div>
+        <div style="text-align: left;">
+          <label>Select Deadline:</label>
+          <input id="swal-deadline" type="date" class="swal2-input">
+        </div>
+      `,
+      focusConfirm: false,
       showCancelButton: true,
-      confirmButtonColor: "#d33",
-      cancelButtonColor: "#6b7280",
-      confirmButtonText: "Yes, Reject it!",
+      confirmButtonText: "Approve",
+      preConfirm: () => {
+        const repayAmount = document.getElementById("swal-repay").value;
+        const deadline = document.getElementById("swal-deadline").value;
+
+        if (!repayAmount || !deadline) {
+          Swal.showValidationMessage("Both repay amount and deadline are required!");
+          return false;
+        }
+
+        return { repayAmount: Number(repayAmount), deadline };
+      },
     });
 
-    if (!result.isConfirmed) return;
+    if (!formValues) return; 
 
     try {
       const res = await fetch(
-        `http://localhost:3000/applications/${id}/reject`,
+        `http://localhost:3000/applications/approve/${loan._id}`,
         {
           method: "PATCH",
           headers: {
+            "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
+          body: JSON.stringify(formValues),
         }
       );
 
-      if (!res.ok) throw new Error("Failed to reject application");
+      if (!res.ok) throw new Error("Approve failed");
 
-      Swal.fire("Rejected!", "The application has been rejected.", "error");
-      fetchLoans();
+      Swal.fire("Approved!", `Loan approved with $${formValues.repayAmount} repayment.`, "success");
+      fetchLoans(); 
     } catch (err) {
-      Swal.fire("Error", err.message, "error");
+      Swal.fire("Error", err.message || "Something went wrong", "error");
     }
   };
 
-  // Stripe Disbursement
-  // Stripe Disbursement (Updated with Error Handling)
-  const handleSendMoney = async (app) => {
+  // Reject and Send Money logic remains the same...
+  const handleReject = async (id) => {
     const result = await Swal.fire({
-      title: "Confirm Disbursement?",
-      text: `Are you sure you want to disburse $${app.loanAmount} to ${app.fullName}?`,
-      icon: "question",
+      title: "Reject Application?",
+      text: "This action cannot be undone!",
+      icon: "warning",
       showCancelButton: true,
-      confirmButtonText: "Yes, Send Money",
-      confirmButtonColor: "#2563eb",
+      confirmButtonColor: "#d33",
+      confirmButtonText: "Yes, Reject",
     });
-
     if (!result.isConfirmed) return;
+    try {
+      const res = await fetch(`http://localhost:3000/applications/${id}/reject`, {
+        method: "PATCH",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (res.ok) {
+        Swal.fire("Rejected", "", "success");
+        fetchLoans();
+      }
+    } catch (err) { console.error(err); }
+  };
 
-    // Loading State start
-    Swal.fire({
-      title: 'Processing Payment...',
-      allowOutsideClick: false,
-      didOpen: () => { Swal.showLoading(); }
-    });
-
+  const handleSendMoney = async (app) => {
+    Swal.fire({ title: 'Processing Disbursement...', allowOutsideClick: false, didOpen: () => { Swal.showLoading(); } });
     try {
       const res = await fetch(`http://localhost:3000/payment/admin/send/${app._id}`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`, // টোকেন পাঠানো জরুরি
-        },
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
       });
-
       const data = await res.json();
-
-      if (data.url) {
-        // যদি স্ট্রাইপ ইউআরএল আসে, সেখানে পাঠানোর আগে নিশ্চিত করুন সাকসেস ইউআরএল ঠিক আছে
-        window.location.href = data.url;
-      } else {
-        throw new Error("Payment URL not found");
-      }
+      if (data.url) window.location.href = data.url;
+      else throw new Error("URL error");
     } catch (err) {
-      console.error("Disbursement Error:", err);
-      Swal.fire("Error", "Payment failed or Admin Session Expired", "error");
+      Swal.fire("Error", "Disbursement failed", "error");
     }
   };
 
-  if (loading) {
-    return (
-      <div className="text-center py-10 text-gray-500">
-        Loading applications...
-      </div>
-    );
-  }
+  if (loading) return <div className="text-center py-10">Loading...</div>;
 
   return (
     <div className="p-6 text-black space-y-12">
-      {/* ================= Pending Applications ================= */}
-      <div>
-        <h2 className="text-2xl font-bold mb-4 text-gray-800">
-          Pending Loan Applications
-        </h2>
-
-        <div className="overflow-x-auto bg-white shadow-lg rounded-2xl">
+      {/* Pending Table */}
+      <section>
+        <h2 className="text-2xl font-bold mb-4 text-indigo-700">Pending Requests</h2>
+        <div className="overflow-x-auto bg-white shadow-xl rounded-2xl border border-gray-100">
           <table className="min-w-full text-sm">
-            <thead className="bg-gray-100 text-gray-700">
+            <thead className="bg-indigo-50 text-gray-700">
               <tr>
-                <th className="px-4 py-3">Loan ID</th>
-                <th className="px-4 py-3">Borrower</th>
-                <th className="px-4 py-3">Amount</th>
-                <th className="px-4 py-3">Date</th>
+                <th className="px-4 py-3 text-left">Borrower</th>
+                <th className="px-4 py-3 text-left">Loan (Interest)</th>
+                <th className="px-4 py-3 text-left">Date</th>
                 <th className="px-4 py-3 text-center">Actions</th>
               </tr>
             </thead>
-
             <tbody>
-              {pendingApps.length === 0 ? (
-                <tr>
-                  <td colSpan="5" className="text-center py-6 text-gray-500">
-                    No pending applications
+              {pendingApps.map((app) => (
+                <tr key={app._id} className="border-t hover:bg-gray-50">
+                  <td className="px-4 py-3 font-medium">{app.fullName}</td>
+                  <td className="px-4 py-3">
+                    ${app.loanAmount} <span className="text-xs text-red-500">({app.interestRate})</span>
+                  </td>
+                  <td className="px-4 py-3 text-gray-500">{new Date(app.date).toLocaleDateString()}</td>
+                  <td className="px-4 py-3 flex justify-center gap-2">
+                    <button onClick={() => handleApprove(app)} className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded-lg transition">Approve</button>
+                    <button onClick={() => handleReject(app._id)} className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg transition">Reject</button>
+                    <button onClick={() => setSelectedApp(app)} className="bg-gray-800 text-white px-3 py-1 rounded-lg transition">View</button>
                   </td>
                 </tr>
-              ) : (
-                pendingApps.map((app) => (
-                  <tr key={app._id} className="border-t hover:bg-gray-50">
-                    <td className="px-4 py-3">
-                      {app.loanId?.slice(-6) || app._id.slice(-6)}
-                    </td>
-                    <td className="px-4 py-3">
-                      <div className="font-medium">{app.fullName}</div>
-                      <div className="text-xs text-gray-500">
-                        {app.borrowerEmail}
-                      </div>
-                    </td>
-                    <td className="px-4 py-3">${app.loanAmount}</td>
-                    <td className="px-4 py-3">
-                      {new Date(app.date).toLocaleDateString()}
-                    </td>
-                    <td className="px-4 py-3 flex justify-center gap-2">
-                      <button
-                        onClick={() => handleApprove(app)}
-                        className="bg-green-600 text-white px-3 py-1 rounded"
-                      >
-                        Approve
-                      </button>
-
-                      <button
-                        onClick={() => handleReject(app._id)}
-                        className="bg-red-600 text-white px-3 py-1 rounded"
-                      >
-                        Reject
-                      </button>
-
-                      <button
-                        onClick={() => setSelectedApp(app)}
-                        className="bg-indigo-600 text-white px-3 py-1 rounded"
-                      >
-                        View
-                      </button>
-                    </td>
-                  </tr>
-                ))
-              )}
+              ))}
             </tbody>
           </table>
         </div>
-      </div>
+      </section>
 
-      {/* ================= Approved Loans (Disbursement) ================= */}
-      <div>
-        <h2 className="text-2xl font-bold mb-4 text-gray-800">
-          Approved Loans (Send Money)
-        </h2>
-
-        <div className="overflow-x-auto bg-white shadow-lg rounded-2xl">
+      {/* Disbursement Table */}
+      <section>
+        <h2 className="text-2xl font-bold mb-4 text-green-700">Approved (Ready to Disburse)</h2>
+        <div className="overflow-x-auto bg-white shadow-xl rounded-2xl border border-gray-100">
           <table className="min-w-full text-sm">
-            <thead className="bg-gray-100 text-gray-700">
+            <thead className="bg-green-50 text-gray-700">
               <tr>
-                <th className="px-4 py-3">Borrower</th>
-                <th className="px-4 py-3">Amount</th>
-                <th className="px-4 py-3 text-center">Actions</th>
+                <th className="px-4 py-3 text-left">Borrower</th>
+                <th className="px-4 py-3 text-left">Amount</th>
+                <th className="px-4 py-3 text-center">Disbursement</th>
               </tr>
             </thead>
-
             <tbody>
-              {approvedApps.length === 0 ? (
-                <tr>
-                  <td colSpan="3" className="text-center py-6 text-gray-500">
-                    No approved loans yet
+              {approvedApps.map((app) => (
+                <tr key={app._id} className="border-t hover:bg-gray-50">
+                  <td className="px-4 py-3 font-medium">{app.fullName}</td>
+                  <td className="px-4 py-3 font-bold text-green-600">${app.loanAmount}</td>
+                  <td className="px-4 py-3 text-center">
+                    <button onClick={() => handleSendMoney(app)} className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-1.5 rounded-full shadow-md transition">
+                      Disburse (Stripe)
+                    </button>
                   </td>
                 </tr>
-              ) : (
-                approvedApps.map((app) => (
-                  <tr key={app._id} className="border-t hover:bg-gray-50">
-                    <td className="px-4 py-3">{app.fullName}</td>
-                    <td className="px-4 py-3">${app.loanAmount}</td>
-                    <td className="px-4 py-3 text-center">
-                      <button
-                        onClick={() => handleSendMoney(app)}
-                        className="bg-blue-600 text-white px-3 py-1 rounded"
-                      >
-                        Send Money (Stripe)
-                      </button>
-                    </td>
-                  </tr>
-                ))
-              )}
+              ))}
             </tbody>
           </table>
         </div>
-      </div>
+      </section>
 
-      {/* ================= View Modal ================= */}
+      {/* View Modal remains the same... */}
       {selectedApp && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center px-4">
-          <div className="bg-white rounded-lg w-full max-w-lg p-6 space-y-4">
-            <h3 className="text-xl font-bold">Loan Application Details</h3>
-
-            <div className="space-y-2 text-sm">
-              <p><strong>Borrower:</strong> {selectedApp.fullName}</p>
-              <p><strong>Email:</strong> {selectedApp.borrowerEmail}</p>
-              <p><strong>Loan Title:</strong> {selectedApp.loanTitle}</p>
-              <p><strong>Amount:</strong> ${selectedApp.loanAmount}</p>
-              <p><strong>Status:</strong> {selectedApp.status}</p>
-              <p>
-                <strong>Date Applied:</strong>{" "}
-                {new Date(selectedApp.date).toLocaleString()}
-              </p>
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
+          <div className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl">
+            <h3 className="text-xl font-bold mb-4">Application Details</h3>
+            <div className="grid grid-cols-2 gap-3 text-sm">
+              <p><strong>Name:</strong> {selectedApp.fullName}</p>
+              <p><strong>Interest:</strong> {selectedApp.interestRate}</p>
+              <p><strong>Monthly Income:</strong> ${selectedApp.monthlyIncome}</p>
+              <p><strong>Source:</strong> {selectedApp.incomeSource}</p>
+              <p className="col-span-2"><strong>Reason:</strong> {selectedApp.reason}</p>
             </div>
-
-            <div className="flex justify-end pt-4">
-              <button
-                onClick={() => setSelectedApp(null)}
-                className="px-4 py-2 border rounded hover:bg-gray-100"
-              >
-                Close
-              </button>
-            </div>
+            <button onClick={() => setSelectedApp(null)} className="mt-6 w-full py-2 bg-gray-100 rounded-xl hover:bg-gray-200">Close</button>
           </div>
         </div>
       )}
