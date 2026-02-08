@@ -8,12 +8,13 @@ const CheckoutForm = ({ app, closeModal, refreshData }) => {
   const [clientSecret, setClientSecret] = useState("");
   const [processing, setProcessing] = useState(false);
 
-  //  FIX: Changed loanAmount to repayAmount to include interest
-  const amountToPay = app?.repayAmount || 0; 
+  // ✅ NEW LOGIC: জরিমানাসহ আসল টাকা হিসাব করা
+  // যদি app.isOverdue থাকে তবে app.payableWithPenalty নিবে, নাহলে সাধারণ repayAmount
+  const amountToPay = app?.isOverdue ? app.payableWithPenalty : (app?.repayAmount || 0);
 
   useEffect(() => {
+    // আগের মতোই API কল হবে, কিন্তু এবার জরিমানাসহ অ্যামাউন্ট পাঠাবে
     if (amountToPay > 0) {
-      //  Log checking: See if it's sending 66300 in console
       console.log("Creating Payment Intent for:", amountToPay);
 
       fetch("http://localhost:3000/create-payment-intent", {
@@ -54,25 +55,29 @@ const CheckoutForm = ({ app, closeModal, refreshData }) => {
       return;
     }
 
-   // Inside handleSubmit function after paymentIntent.status === "succeeded"
-if (paymentIntent.status === "succeeded") {
-  const paymentInfo = {
-    transactionId: paymentIntent.id,
-    amount: amountToPay,
-    email: app?.borrowerEmail,
-  };
+    if (paymentIntent.status === "succeeded") {
+      const paymentInfo = {
+        transactionId: paymentIntent.id,
+        amount: amountToPay, // জরিমানাসহ টাকা ডাটাবেসে সেভ হবে
+        email: app?.borrowerEmail,
+        penaltyPaid: app?.isOverdue ? app.penaltyAmount : 0 // রেকর্ড রাখার জন্য জরিমানা কত ছিল তা পাঠানো
+      };
 
-  // Call the update API with payment details
-  await fetch(`http://localhost:3000/applications/pay/${app._id}`, {
-    method: "PATCH",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(paymentInfo), // Passing the data to backend
-  });
+      await fetch(`http://localhost:3000/applications/pay/${app._id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(paymentInfo),
+      });
 
-  Swal.fire("Success", `Payment ID: ${paymentIntent.id}`, "success");
-  closeModal();
-  refreshData();
-}
+      Swal.fire({
+        title: "Success!",
+        text: `Payment Successful. ID: ${paymentIntent.id}`,
+        icon: "success",
+        confirmButtonColor: "#4F46E5",
+      });
+      closeModal();
+      refreshData();
+    }
   }
 
   return (
@@ -101,18 +106,25 @@ if (paymentIntent.status === "succeeded") {
             : "bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-indigo-700 hover:to-blue-700 transform hover:-translate-y-1 active:scale-95"
           }`}
       >
-        <div className="flex items-center justify-center gap-2">
+        <div className="flex flex-col items-center justify-center">
           {processing ? (
-            <>
+            <div className="flex items-center gap-2">
               <span className="loading loading-spinner loading-sm"></span>
               <span>Processing...</span>
-            </>
+            </div>
           ) : (
             <>
-              <span>Pay Full Amount</span>
-              <span className="bg-white/20 px-2 py-0.5 rounded text-sm">
-                ${Number(amountToPay).toLocaleString()}
-              </span>
+              <div className="flex items-center gap-2">
+                <span>{app?.isOverdue ? "Pay Total (with Fine)" : "Pay Full Amount"}</span>
+                <span className="bg-white/20 px-2 py-0.5 rounded text-sm">
+                  ${Number(amountToPay).toLocaleString()}
+                </span>
+              </div>
+              {app?.isOverdue && (
+                <span className="text-[10px] font-normal opacity-80">
+                  (Includes ${app.penaltyAmount} late fee)
+                </span>
+              )}
             </>
           )}
         </div>
