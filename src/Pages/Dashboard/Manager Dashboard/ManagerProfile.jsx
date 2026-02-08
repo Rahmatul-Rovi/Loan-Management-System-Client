@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaSignOutAlt, FaUserEdit } from 'react-icons/fa';
 import { AuthContext } from '../../../Auth/AuthContext';
@@ -10,22 +10,36 @@ const ManagerProfile = () => {
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  // Update Form-এর জন্য স্টেট
-  const [formData, setFormData] = useState({
-    name: user?.displayName || '',
-    photoURL: user?.photoURL || ''
-  });
+  // User Data State from Database
+  const [dbUser, setDbUser] = useState(null);
+  const [formData, setFormData] = useState({ name: '', photoURL: '' });
   const [updating, setUpdating] = useState(false);
 
-  if (!user) {
+  useEffect(() => {
+    if (user?.email) {
+      fetch(`http://localhost:3000/users/by-email?email=${user.email}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data && data.length > 0) {
+            setDbUser(data[0]);
+            setFormData({
+              name: data[0].name || '',
+              photoURL: data[0].photoURL || ''
+            });
+          }
+        });
+    }
+  }, [user]);
+
+  if (!user || !dbUser) {
     return (
       <div className="text-center py-10 text-gray-500">
-        Loading profile...
+        Loading profile info...
       </div>
     );
   }
 
-  // প্রোফাইল আপডেট ফাংশন
+  // Profile Update Function
   const handleUpdate = async (e) => {
     e.preventDefault();
     setUpdating(true);
@@ -39,10 +53,11 @@ const ManagerProfile = () => {
       const data = await res.json();
 
       if (data.success) {
-        Swal.fire("Success", "Profile Updated! Please refresh to see changes.", "success");
+        // For User update db and UI
+        setDbUser({ ...dbUser, name: formData.name, photoURL: formData.photoURL });
+        Swal.fire("Success", "Profile Updated in Database!", "success");
       }
     } catch (error) {
-      console.error("Update Error:", error);
       Swal.fire("Error", "Failed to update profile", "error");
     } finally {
       setUpdating(false);
@@ -59,67 +74,72 @@ const ManagerProfile = () => {
   };
 
   return (
-    <div className="p-6 max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div className="p-6 max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 mt-10">
       
-      {/* --- প্রোফাইল কার্ড (আপনার আগের ডিজাইন) --- */}
-      <div className="bg-white dark:bg-[#111B33] shadow-lg rounded-3xl p-6 flex flex-col items-center border dark:border-gray-800">
+      {/* --- Profile Card Start --- */}
+      <div className="bg-white dark:bg-[#111B33] shadow-2xl rounded-3xl p-8 flex flex-col items-center border dark:border-gray-800">
+        {/* Photo from database */}
         <img
-          src={user.photoURL || 'https://i.ibb.co/4pDNDk1/avatar.png'}
+          src={dbUser.photoURL || 'https://i.ibb.co/L9n66vP/admin-avatar.png'}
           alt="Profile"
-          className="w-28 h-28 rounded-full border-4 border-indigo-500 mb-4 object-cover"
+          className="w-32 h-32 rounded-full border-4 border-indigo-500 mb-6 object-cover shadow-lg"
         />
 
-        <h2 className="text-2xl font-bold text-gray-800 dark:text-white">{user.displayName || "Manager"}</h2>
-        <p className="text-gray-500">{user.email}</p>
-        <p className="text-gray-500 mb-4 capitalize">Role: Manager</p>
+        {/* Name from database */}
+        <h2 className="text-3xl font-black text-gray-800 dark:text-white mb-1">{dbUser.name || "Manager Name"}</h2>
+        <p className="text-indigo-500 font-medium mb-6">{dbUser.email}</p>
 
-        <div className="w-full mt-6 space-y-3 text-gray-700 dark:text-gray-300">
-          <div className="flex justify-between border-b dark:border-gray-700 py-2">
-            <span className="font-medium">Email</span>
-            <span className="text-sm">{user.email}</span>
+        <div className="w-full space-y-4 text-gray-700 dark:text-gray-300">
+          <div className="flex justify-between border-b dark:border-gray-700 pb-3">
+            <span className="font-bold">Full Name</span>
+            <span>{dbUser.name}</span>
           </div>
-          <div className="flex justify-between border-b dark:border-gray-700 py-2">
-            <span className="font-medium">Account Status</span>
+          <div className="flex justify-between border-b dark:border-gray-700 pb-3">
+            <span className="font-bold">Role</span>
+            <span className="capitalize">{dbUser.role}</span>
+          </div>
+          <div className="flex justify-between border-b dark:border-gray-700 pb-3">
+            <span className="font-bold">Account Status</span>
             <span className="text-green-500 font-bold">Active</span>
           </div>
         </div>
 
         <button
           onClick={handleLogout}
-          className="mt-10 flex items-center gap-2 px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-xl shadow transition w-full justify-center"
+          className="mt-10 flex items-center gap-2 px-8 py-3 bg-red-500 hover:bg-red-600 text-white font-bold rounded-2xl shadow-lg transition-all w-full justify-center"
         >
-          <FaSignOutAlt /> Logout
+          <FaSignOutAlt /> Sign Out
         </button>
       </div>
 
-      {/* --- প্রোফাইল এডিট ফর্ম (নতুন যোগ করা হলো) --- */}
-      <div className="bg-white dark:bg-[#111B33] shadow-lg rounded-3xl p-8 border dark:border-gray-800">
-        <div className="flex items-center gap-2 mb-6 text-indigo-600 dark:text-indigo-400">
-            <FaUserEdit className="text-2xl" />
-            <h2 className="text-2xl font-bold">Edit Profile</h2>
+      {/* --- Profile Edit form --- */}
+      <div className="bg-white dark:bg-[#111B33] shadow-2xl rounded-3xl p-8 border dark:border-gray-800">
+        <div className="flex items-center gap-3 mb-8 text-indigo-600 dark:text-indigo-400">
+            <FaUserEdit className="text-3xl" />
+            <h2 className="text-2xl font-black italic">Settings</h2>
         </div>
         
-        <form onSubmit={handleUpdate} className="space-y-5">
+        <form onSubmit={handleUpdate} className="space-y-6">
           <div>
-            <label className="block text-sm font-medium text-gray-600 dark:text-gray-400">Full Name</label>
+            <label className="block text-sm font-bold text-gray-600 dark:text-gray-400 mb-2">Update Name</label>
             <input 
               type="text" 
-              className="w-full mt-2 p-3 rounded-xl border dark:bg-[#0A122A] dark:border-gray-700 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none"
+              className="w-full p-4 rounded-2xl border dark:bg-[#0A122A] dark:border-gray-700 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
               value={formData.name}
               onChange={(e) => setFormData({...formData, name: e.target.value})}
-              placeholder="Enter your name"
+              placeholder="Your new name"
               required
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-600 dark:text-gray-400">Profile Photo URL</label>
+            <label className="block text-sm font-bold text-gray-600 dark:text-gray-400 mb-2">New Photo URL</label>
             <input 
               type="text" 
-              className="w-full mt-2 p-3 rounded-xl border dark:bg-[#0A122A] dark:border-gray-700 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none"
+              className="w-full p-4 rounded-2xl border dark:bg-[#0A122A] dark:border-gray-700 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
               value={formData.photoURL}
               onChange={(e) => setFormData({...formData, photoURL: e.target.value})}
-              placeholder="Link: https://example.com/photo.jpg"
+              placeholder="Paste image link here"
               required
             />
           </div>
@@ -127,10 +147,10 @@ const ManagerProfile = () => {
           <button 
             type="submit" 
             disabled={updating}
-            className={`w-full py-4 rounded-xl font-bold text-white transition-all shadow-lg 
-              ${updating ? 'bg-gray-400' : 'bg-indigo-600 hover:bg-indigo-700 hover:-translate-y-1'}`}
+            className={`w-full py-4 rounded-2xl font-black text-white uppercase tracking-widest shadow-xl transition-all
+              ${updating ? 'bg-gray-400 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700 transform hover:scale-[1.02]'}`}
           >
-            {updating ? "Saving Changes..." : "Save Changes"}
+            {updating ? "Processing..." : "Update Profile"}
           </button>
         </form>
       </div>
