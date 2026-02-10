@@ -18,9 +18,9 @@ const About = () => {
             Empower Your Financial Journey
           </h2>
           <p className="text-gray-700 dark:text-gray-400 text-lg sm:text-xl mb-6">
-            LoanLink is your complete loan management solution. Track applications, manage approvals, 
+            QuickLoan is your complete loan management solution. Track applications, manage approvals, 
             and make informed decisions—all in one secure and intuitive platform. Designed for individuals 
-            and businesses, LoanLink gives you full control of your financial growth.
+            and businesses, QuickLoan gives you full control of your financial growth.
           </p>
 
           {/* Feature Cards */}

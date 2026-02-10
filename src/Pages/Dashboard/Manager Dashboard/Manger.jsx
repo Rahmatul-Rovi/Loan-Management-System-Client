@@ -127,7 +127,7 @@ const Manager = () => {
                   : 'opacity-0 max-w-0 p-0'
               }`}
           >
-            LoanLink
+            QuickLoan
           </span>
         </div>
 

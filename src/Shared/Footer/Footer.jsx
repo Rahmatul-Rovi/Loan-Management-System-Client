@@ -11,7 +11,7 @@ const Footer = () => {
             to="/"
             className="text-2xl font-extrabold text-primary tracking-wide hover:text-primary-focus transition-colors"
           >
-            LoanLink
+            QuickLoan
           </Link>
           <p className="text-gray-500">
             Connecting you to loans seamlessly. Reliable, fast, and transparent
@@ -137,7 +137,7 @@ const Footer = () => {
             </a>
           </div>
           <p className="text-gray-400 text-sm mt-3">
-            © 2025 LoanLink. All rights reserved.
+            © 2025 QuickLoan. All rights reserved.
           </p>
         </div>
       </div>

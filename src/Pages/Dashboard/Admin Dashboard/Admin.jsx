@@ -87,7 +87,7 @@ const Admin = () => {
             className={`text-2xl font-bold text-primary transition-all duration-300 overflow-hidden whitespace-nowrap
               ${sidebarOpen ? 'opacity-100 max-w-full p-2' : 'opacity-0 max-w-0 p-0'}`}
           >
-            LoanLink
+            QuickLoan
           </span>
         </div>
 

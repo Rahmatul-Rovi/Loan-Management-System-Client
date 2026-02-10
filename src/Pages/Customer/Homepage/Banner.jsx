@@ -15,7 +15,7 @@ const Banner = () => {
           className="flex-1 text-center lg:text-left"
         >
           <h1 className="text-4xl lg:text-6xl font-extrabold text-white mb-4 leading-tight">
-            Simplify Your Loans with <span className="text-info">LoanLink</span>
+            Simplify Your Loans with <span className="text-info">QuickLoan</span>
           </h1>
           <p className="text-white/80 text-lg mb-6">
             Experience effortless loan management in one unified space. We simplify complex financial workflows with smart automation and enterprise-grade security you can trust.

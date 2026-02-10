@@ -48,7 +48,7 @@ const Navbar = () => {
           to="/"
           className="text-2xl font-extrabold tracking-wide text-primary hover:text-primary-focus transition-colors"
         >
-          LoanLink
+          QuickLoan
         </Link>
 
         {/* Desktop Links */}
