@@ -14,7 +14,7 @@ import { auth } from '../Firebase.init';
 const googleProvider = new GoogleAuthProvider();
 
 const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(null);      // 🔥 setUser exposed now
   const [loading, setLoading] = useState(true);
 
   const createUser = (email, password) => {
@@ -22,7 +22,7 @@ const AuthProvider = ({ children }) => {
     return createUserWithEmailAndPassword(auth, email, password);
   };
 
-  const SignInUser = (email, password) => {
+  const signInUser = (email, password) => {
     setLoading(true);
     return signInWithEmailAndPassword(auth, email, password);
   };
@@ -46,12 +46,13 @@ const AuthProvider = ({ children }) => {
 
   const AuthInfo = {
     createUser,
-    SignInUser,
+    signInUser,
     googleSignIn,
-    user,
-    loading,
     addProfileInfo,
     signOutUser,
+    user,
+    setUser,          // 🔥 add this
+    loading,
   };
 
   useEffect(() => {
@@ -63,7 +64,11 @@ const AuthProvider = ({ children }) => {
     return () => unsubscribe();
   }, []);
 
-  return <AuthContext value={AuthInfo}>{children}</AuthContext>;
+  return (
+    <AuthContext.Provider value={AuthInfo}> {/* 🔥 Provider fix */}
+      {children}
+    </AuthContext.Provider>
+  );
 };
 
 export default AuthProvider;

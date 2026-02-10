@@ -80,10 +80,12 @@ const ManagerProfile = () => {
       <div className="bg-white dark:bg-[#111B33] shadow-2xl rounded-3xl p-8 flex flex-col items-center border dark:border-gray-800">
         {/* Photo from database */}
         <img
-          src={dbUser.photoURL || 'https://i.ibb.co/L9n66vP/admin-avatar.png'}
-          alt="Profile"
-          className="w-32 h-32 rounded-full border-4 border-indigo-500 mb-6 object-cover shadow-lg"
-        />
+  // dbUser থেকে ডাটা না আসা পর্যন্ত user (AuthContext) এর ছবি দেখাবে
+  src={dbUser?.photoURL || user?.photoURL || 'https://i.ibb.co/L9n66vP/admin-avatar.png'}
+  alt="Profile"
+  className="w-32 h-32 rounded-full border-4 border-indigo-500 mb-6 object-cover shadow-lg"
+  onError={(e) => { e.target.src = 'https://i.ibb.co/L9n66vP/admin-avatar.png' }}
+/>
 
         {/* Name from database */}
         <h2 className="text-3xl font-black text-gray-800 dark:text-white mb-1">{dbUser.name || "Manager Name"}</h2>

@@ -89,12 +89,18 @@ const Navbar = () => {
           <ThemeToggle />
           {user ? (
             <>
-              <img
-                src={user.photoURL || 'https://via.placeholder.com/40'}
-                alt="User Avatar"
-                className="w-10 h-10 rounded-full border border-gray-300 shadow-sm cursor-pointer"
-                onClick={toggleDropdown}
-              />
+            <img
+  src={user?.photoURL || 'https://i.ibb.co/3S3s8V3/user-placeholder.png'}
+  alt="User Avatar"
+  loading="lazy"
+  className="w-10 h-10 rounded-full border border-gray-300 shadow-sm cursor-pointer object-cover transition-all duration-300"
+  onClick={toggleDropdown}
+  onError={(e) => {
+    e.target.onerror = null;
+    e.target.src = 'https://i.ibb.co/3S3s8V3/user-placeholder.png';
+  }}
+/>
+
               {dropdownOpen && (
                 <div
                   ref={dropdownRef}
