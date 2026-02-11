@@ -15,10 +15,12 @@ import {
   FaFileAlt,
   FaAngleDown,
   FaChartBar,
+  FaStar,
 } from 'react-icons/fa';
 import { signOut } from 'firebase/auth';
 import { auth } from '../../../Firebase.init';
 import ErrorPage from '../../../Shared/ErrorPage/ErrorPage';
+import ManageReviews from './ManageReviews';
 
 const Manager = () => {
   const [user, setUser] = useState(null);
@@ -68,8 +70,8 @@ const Manager = () => {
     );
   }
 
-  const managerChildren = [
-    { path: '/dashboard/manager', label: 'Add Loan', icon: <FaPlus /> },
+ const managerChildren = [
+    { path: '/dashboard/manager/add-loan', label: 'Add Loan', icon: <FaPlus /> },
     {
       path: '/dashboard/manager/approve-application',
       label: 'Approve Application',
@@ -86,15 +88,20 @@ const Manager = () => {
       icon: <FaFileAlt />,
     },
     {
+      path: '/dashboard/manager/manage-reviews', // পাথটি এখানে ঠিক করুন
+      label: 'Manage Reviews', // মেনুতে কি লেখা থাকবে
+      icon: <FaStar />, // FaStar ইমপোর্ট করে নিবেন
+    },
+    {
       path: '/dashboard/manager/manager-profile',
       label: 'Profile',
       icon: <FaUserCircle />,
     },
     {
-  path: '/dashboard/manager/admin-stats', // অথবা আপনার পছন্দমতো পাথ
-  label: 'Analytics',
-  icon: <FaChartBar />, // এটি ইমপোর্ট করে নিতে হবে FaChartBar
-},
+      path: '/dashboard/manager/admin-stats',
+      label: 'Analytics',
+      icon: <FaChartBar />,
+    },
   ];
 
   return (

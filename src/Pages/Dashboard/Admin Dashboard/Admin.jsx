@@ -7,6 +7,7 @@ import {
   FaMoneyCheckAlt,
   FaFileInvoice,
   FaAngleDown,
+  FaStar,
 } from 'react-icons/fa';
 import { signOut } from 'firebase/auth';
 import { auth } from '../../../Firebase.init';
@@ -63,6 +64,7 @@ const Admin = () => {
     { path: '/dashboard/admin', label: 'Manage Users', icon: <FaUsers /> },
     { path: '/dashboard/admin/all-loans', label: 'All Loans', icon: <FaMoneyCheckAlt /> },
     { path: '/dashboard/admin/loan-applications', label: 'Loan Applications', icon: <FaFileInvoice /> },
+    { path: '/dashboard/admin/manage-reviews', label: 'Manage Reviews', icon: <FaStar /> },
   ];
 
   return (

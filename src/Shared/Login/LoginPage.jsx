@@ -8,7 +8,7 @@ import { sendPasswordResetEmail } from 'firebase/auth';
 import { auth } from '../../Firebase.init';
 
 const LoginPage = () => {
-  const { SignInUser, googleSignIn } = useContext(AuthContext);
+  const { signInUser, googleSignIn } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const [showPassword, setShowPassword] = useState(false);
@@ -48,7 +48,7 @@ const LoginPage = () => {
       }
 
       // ---------------- Firebase Login ----------------
-      const result = await SignInUser(email, password);
+      const result = await signInUser(email, password);
       const firebaseUser = result.user;
 
       const res = await fetch(
