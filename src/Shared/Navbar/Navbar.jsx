@@ -1,8 +1,8 @@
-import React, { useState, useContext, useRef, useEffect } from 'react';
-import { Link, NavLink } from 'react-router';
-import { FaBars, FaTimes } from 'react-icons/fa';
-import ThemeToggle from '../Theme/ThemeToggle';
-import { AuthContext } from '../../Auth/AuthContext';
+import React, { useState, useContext, useRef, useEffect } from "react";
+import { Link, NavLink } from "react-router";
+import { FaBars, FaTimes } from "react-icons/fa";
+import ThemeToggle from "../Theme/ThemeToggle";
+import { AuthContext } from "../../Auth/AuthContext";
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -29,15 +29,15 @@ const Navbar = () => {
         setDropdownOpen(false);
       }
     };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   const links = [
-    { name: 'Home', path: '/' },
-    { name: 'All Loans', path: '/all-loans' },
-    { name: 'About Us', path: '/about' },
-    { name: 'Contact', path: '/contact' },
+    { name: "Home", path: "/" },
+    { name: "All Loans", path: "/all-loans" },
+    { name: "About Us", path: "/about" },
+    { name: "Contact", path: "/contact" },
   ];
 
   return (
@@ -60,8 +60,8 @@ const Navbar = () => {
               className={({ isActive }) =>
                 `transition-colors duration-300 ${
                   isActive
-                    ? 'text-primary font-semibold underline underline-offset-4'
-                    : 'text-gray-700 hover:text-primary hover:underline hover:underline-offset-4'
+                    ? "text-primary font-semibold underline underline-offset-4"
+                    : "text-gray-700 hover:text-primary hover:underline hover:underline-offset-4"
                 }`
               }
             >
@@ -74,8 +74,8 @@ const Navbar = () => {
               className={({ isActive }) =>
                 `transition-colors duration-300 ${
                   isActive
-                    ? 'text-primary font-semibold underline underline-offset-4'
-                    : 'text-gray-700 hover:text-primary hover:underline hover:underline-offset-4'
+                    ? "text-primary font-semibold underline underline-offset-4"
+                    : "text-gray-700 hover:text-primary hover:underline hover:underline-offset-4"
                 }`
               }
             >
@@ -89,17 +89,21 @@ const Navbar = () => {
           <ThemeToggle />
           {user ? (
             <>
-            <img
-  src={user?.photoURL || 'https://i.ibb.co/3S3s8V3/user-placeholder.png'}
-  alt="User Avatar"
-  loading="lazy"
-  className="w-10 h-10 rounded-full border border-gray-300 shadow-sm cursor-pointer object-cover transition-all duration-300"
-  onClick={toggleDropdown}
-  onError={(e) => {
-    e.target.onerror = null;
-    e.target.src = 'https://i.ibb.co/3S3s8V3/user-placeholder.png';
-  }}
-/>
+              <img
+                src={
+                  user?.photoURL ||
+                  "https://i.ibb.co/3S3s8V3/user-placeholder.png"
+                }
+                alt="User Avatar"
+                loading="lazy"
+                className="w-10 h-10 rounded-full border border-gray-300 shadow-sm cursor-pointer object-cover transition-all duration-300"
+                onClick={toggleDropdown}
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src =
+                    "https://i.ibb.co/3S3s8V3/user-placeholder.png";
+                }}
+              />
 
               {dropdownOpen && (
                 <div
@@ -107,7 +111,7 @@ const Navbar = () => {
                   className="absolute top-12 right-0 w-56 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg p-4 z-50"
                 >
                   <p className="font-semibold text-gray-900 dark:text-gray-100">
-                    {user.displayName || 'User Name'}
+                    {user.displayName || "User Name"}
                   </p>
                   <p className="text-sm text-gray-600 dark:text-gray-300">
                     {user.email}
@@ -146,7 +150,7 @@ const Navbar = () => {
       {/* Mobile Menu */}
       <div
         className={`lg:hidden transition-all duration-300 overflow-hidden ${
-          menuOpen ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0'
+          menuOpen ? "max-h-screen opacity-100" : "max-h-0 opacity-0"
         }`}
       >
         <ul className="flex flex-col px-6 pb-4 space-y-3 text-base font-medium bg-base-100 border-t border-base-300">
@@ -158,8 +162,8 @@ const Navbar = () => {
               className={({ isActive }) =>
                 `transition-colors duration-300 ${
                   isActive
-                    ? 'text-primary font-semibold underline underline-offset-4'
-                    : 'text-gray-700 hover:text-primary hover:underline hover:underline-offset-4'
+                    ? "text-primary font-semibold underline underline-offset-4"
+                    : "text-gray-700 hover:text-primary hover:underline hover:underline-offset-4"
                 }`
               }
             >
@@ -173,8 +177,8 @@ const Navbar = () => {
               className={({ isActive }) =>
                 `transition-colors duration-300 ${
                   isActive
-                    ? 'text-primary font-semibold underline underline-offset-4'
-                    : 'text-gray-700 hover:text-primary hover:underline hover:underline-offset-4'
+                    ? "text-primary font-semibold underline underline-offset-4"
+                    : "text-gray-700 hover:text-primary hover:underline hover:underline-offset-4"
                 }`
               }
             >
