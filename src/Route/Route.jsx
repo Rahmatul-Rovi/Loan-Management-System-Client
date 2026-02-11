@@ -25,6 +25,7 @@ import MyLoans from './../Pages/Dashboard/Borrower Dasboard/MyLoans';
 import ErrorPage from '../Shared/ErrorPage/ErrorPage';
 import PaymentHistory from '../Pages/Dashboard/Borrower Dasboard/PaymentHistory/PaymentHistory';
 import AdminChart from '../Pages/Dashboard/Manager Dashboard/AdminChart';
+import GiveReview from '../Pages/Dashboard/Borrower Dasboard/GiveReview';
 
 export const router = createBrowserRouter([
   {
@@ -54,6 +55,10 @@ export const router = createBrowserRouter([
   {
     path: '/borrower-profile',
     element: <BorrowerProfile></BorrowerProfile>,
+  },
+  {
+    path: 'giveReview',
+    element: GiveReview
   },
   
     {
