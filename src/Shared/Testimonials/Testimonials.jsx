@@ -3,15 +3,35 @@ import { FaStar, FaQuoteLeft } from 'react-icons/fa';
 
 const Testimonials = () => {
   const [reviews, setReviews] = useState([]);
+  const [loading, setLoading] = useState(true); // New Loading State
 
   useEffect(() => {
     fetch('http://localhost:3000/reviews')
       .then(res => res.json())
-      .then(data => setReviews(data))
-      .catch(err => console.error(err));
+      .then(data => {
+        setReviews(data);
+        setLoading(false); // Stop loading
+      })
+      .catch(err => {
+        console.error(err);
+        setLoading(false);
+      });
   }, []);
 
-  if (reviews.length === 0) return null;
+  // Show a spinner or text while waiting for the database
+  if (loading) {
+    return <div className="py-20 text-center font-bold">Loading Testimonials...</div>;
+  }
+
+  // If the database is actually empty, show this instead of nothing
+  if (reviews.length === 0) {
+    return (
+      <div className="py-20 text-center">
+        <h2 className="text-2xl font-bold text-gray-400">No reviews found in database.</h2>
+        <p>Go to your dashboard and add a review first!</p>
+      </div>
+    );
+  }
 
   return (
     <section className="py-20 bg-gray-50 dark:bg-[#0A122A]">
@@ -29,11 +49,15 @@ const Testimonials = () => {
                 "{rev.comment}"
               </p>
               <div className="flex items-center gap-4 border-t dark:border-gray-800 pt-6">
-                <img src={rev.photo} className="w-14 h-14 rounded-2xl object-cover border-2 border-blue-500" alt={rev.name} />
+                <img 
+                  src={rev.photo || "https://i.ibb.co/3S3s8V3/user-placeholder.png"} 
+                  className="w-14 h-14 rounded-2xl object-cover border-2 border-blue-500" 
+                  alt={rev.name} 
+                />
                 <div>
                   <h4 className="font-black text-gray-800 dark:text-white">{rev.name}</h4>
                   <div className="flex text-yellow-400 text-sm mt-1">
-                    {[...Array(rev.rating)].map((_, i) => <FaStar key={i} />)}
+                    {[...Array(Number(rev.rating) || 0)].map((_, i) => <FaStar key={i} />)}
                   </div>
                 </div>
               </div>

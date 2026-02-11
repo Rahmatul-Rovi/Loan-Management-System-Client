@@ -5,6 +5,7 @@ import Tutorial from './Tutorial';
 import Feedback from './Feedback';
 import Feature from './Feature';
 import Catagory from './Catagory';
+import Testimonials from '../../../Shared/Testimonials/Testimonials';
 
 const Home = () => {
   return (
@@ -15,6 +16,7 @@ const Home = () => {
       <Tutorial></Tutorial>
       <Feedback></Feedback>
       <Feature></Feature>
+      <Testimonials></Testimonials>
     </div>
   );
 };

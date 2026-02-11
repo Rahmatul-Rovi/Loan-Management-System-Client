@@ -26,6 +26,7 @@ import ErrorPage from '../Shared/ErrorPage/ErrorPage';
 import PaymentHistory from '../Pages/Dashboard/Borrower Dasboard/PaymentHistory/PaymentHistory';
 import AdminChart from '../Pages/Dashboard/Manager Dashboard/AdminChart';
 import GiveReview from '../Pages/Dashboard/Borrower Dasboard/GiveReview';
+import Testimonials from '../Shared/Testimonials/Testimonials';
 
 export const router = createBrowserRouter([
   {
@@ -36,6 +37,7 @@ export const router = createBrowserRouter([
       { path: '/', element: <Home /> },
       { path: '/about', element: <About /> },
       { path: '/contact', element: <Contact /> },
+      {path: 'testimonials', element: <Testimonials></Testimonials>},
       { path: '/all-loans', element: <AllLoans /> },
       { path: '/all-loans/:id', element: <LoanDetails /> },
       { path: '/apply-loan/:id', element: <ApplyLoan /> },
