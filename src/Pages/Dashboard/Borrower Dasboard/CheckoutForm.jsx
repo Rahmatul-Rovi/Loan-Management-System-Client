@@ -8,12 +8,12 @@ const CheckoutForm = ({ app, closeModal, refreshData }) => {
   const [clientSecret, setClientSecret] = useState("");
   const [processing, setProcessing] = useState(false);
 
-  // ✅ NEW LOGIC: জরিমানাসহ আসল টাকা হিসাব করা
-  // যদি app.isOverdue থাকে তবে app.payableWithPenalty নিবে, নাহলে সাধারণ repayAmount
+  // NEW LOGIC: Pay Amount with charge
+  // if Overdue then payableWithPenalty ,  otherwise repayAmount
   const amountToPay = app?.isOverdue ? app.payableWithPenalty : (app?.repayAmount || 0);
 
   useEffect(() => {
-    // আগের মতোই API কল হবে, কিন্তু এবার জরিমানাসহ অ্যামাউন্ট পাঠাবে
+    // APi Call 
     if (amountToPay > 0) {
       console.log("Creating Payment Intent for:", amountToPay);
 
@@ -58,9 +58,9 @@ const CheckoutForm = ({ app, closeModal, refreshData }) => {
     if (paymentIntent.status === "succeeded") {
       const paymentInfo = {
         transactionId: paymentIntent.id,
-        amount: amountToPay, // জরিমানাসহ টাকা ডাটাবেসে সেভ হবে
+        amount: amountToPay, // Taka add with extra charge
         email: app?.borrowerEmail,
-        penaltyPaid: app?.isOverdue ? app.penaltyAmount : 0 // রেকর্ড রাখার জন্য জরিমানা কত ছিল তা পাঠানো
+        penaltyPaid: app?.isOverdue ? app.penaltyAmount : 0 // extra chage for record 
       };
 
       await fetch(`http://localhost:3000/applications/pay/${app._id}`, {

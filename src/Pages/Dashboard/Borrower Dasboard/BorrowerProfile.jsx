@@ -6,7 +6,7 @@ import { auth } from '../../../Firebase.init';
 import { FaUserEdit, FaEnvelope, FaUser, FaLink } from 'react-icons/fa';
 
 const BorrowerProfile = ({ theme = 'light' }) => {
-  const { user, setUser } = useContext(AuthContext);   // 🔥 setUser নিতে হবে
+  const { user, setUser } = useContext(AuthContext);   
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [name, setName] = useState('');
   const [photo, setPhoto] = useState('');
@@ -35,9 +35,9 @@ const BorrowerProfile = ({ theme = 'light' }) => {
         photoURL: photo,
       });
 
-      await auth.currentUser.reload();   // 🔥 latest user আনবে
+      await auth.currentUser.reload();   
 
-      setUser(auth.currentUser);         // 🔥 instant UI update
+      setUser(auth.currentUser);         
       toast.success('Profile updated successfully!');
       setIsModalOpen(false);
 

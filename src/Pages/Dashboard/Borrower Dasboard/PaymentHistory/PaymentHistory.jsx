@@ -7,7 +7,7 @@ const PaymentHistory = () => {
   const [payments, setPayments] = useState([]);
 
  useEffect(() => {
-  // নিশ্চিত করুন আপনার ব্যাকএন্ডে এই GET রাউটটি আছে
+  // From backend route
   fetch(`http://localhost:3000/transactions/${user?.email}`)
     .then(res => res.json())
     .then(data => setPayments(data));

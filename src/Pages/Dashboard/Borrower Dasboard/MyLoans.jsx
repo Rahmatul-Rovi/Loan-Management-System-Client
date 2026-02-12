@@ -47,7 +47,7 @@ const MyLoans = () => {
       const data = await res.json();
 
       if (Array.isArray(data)) {
-        // ✅ পেনাল্টি ক্যালকুলেশন লজিক সরাসরি ফ্রন্টএন্ডে (যাতে ইউজার লাইভ দেখতে পায়)
+        // Penalty Calculation to show this user logic in frontend
         const updatedData = data.map((app) => {
           if (
             app.status === "disbursed" &&
@@ -61,7 +61,7 @@ const MyLoans = () => {
               const diffTime = Math.abs(today - deadlineDate);
               const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-              const penaltyPerDay = 100; // ৫০০ টাকা প্রতিদিন জরিমানা
+              const penaltyPerDay = 100; // regular 100tk charge
               const totalPenalty = diffDays * penaltyPerDay;
 
               return {
@@ -91,7 +91,7 @@ const MyLoans = () => {
     fetchApplications();
   }, [user]);
 
-  // Calculations for Statistics (জরিমানাসহ আপডেট করা হয়েছে)
+  // Calculations for Statistics 
   const totalLoans = applications.length;
   const totalLoanAmount = applications.reduce(
     (sum, app) => sum + Number(app.loanAmount || 0),
@@ -211,7 +211,7 @@ const MyLoans = () => {
                     ${Number(app.loanAmount || 0).toLocaleString()}
                   </td>
                   <td className="px-4 py-4">
-                    {/* ✅ স্ট্যাটাস কলামে Overdue আপডেট */}
+                    {/* Overdue update in status coloumn */}
                     <span
                       className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase ${
                         app.isOverdue
@@ -229,7 +229,7 @@ const MyLoans = () => {
                   <td className="px-4 py-4">
                     {app.repayStatus === "paid" ? (
                       <span className="text-green-500 font-bold text-xs flex items-center italic">
-                        ✅ Paid
+                        Paid
                       </span>
                     ) : app.status === "disbursed" ? (
                       <div className="flex flex-col gap-1">
@@ -299,7 +299,7 @@ const MyLoans = () => {
                 <span className="font-bold">{selectedApp.loanTitle}</span>
               </p>
 
-              {/* ✅ মোডালে জরিমানাসহ টোটাল অ্যামাউন্ট দেখানো */}
+              {/* Amount Show with charge */}
               <p className="text-2xl font-black mt-2">
                 Total Payable:{" "}
                 <span

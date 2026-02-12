@@ -97,10 +97,10 @@ export const router = createBrowserRouter([
           { path: "pending-application", element: <ManagerPendingApp /> },
           { path: "manager-profile", element: <ManagerProfile /> },
           { path: "admin-stats", element: <AdminChart /> },
-          // সংশোধিত রুট:
+          
           { 
             path: "manage-reviews", 
-            element: <ManageReviews></ManageReviews> // আপাতত AdminRoute সরিয়ে চেক করুন কাজ করে কি না
+            element: <ManageReviews></ManageReviews>
           },
         ],
       },
