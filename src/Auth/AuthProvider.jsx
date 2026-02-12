@@ -51,7 +51,7 @@ const AuthProvider = ({ children }) => {
     addProfileInfo,
     signOutUser,
     user,
-    setUser,          // 🔥 add this
+    setUser,   
     loading,
   };
 
@@ -65,7 +65,7 @@ const AuthProvider = ({ children }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={AuthInfo}> {/* 🔥 Provider fix */}
+    <AuthContext.Provider value={AuthInfo}> {/*  Provider fix */}
       {children}
     </AuthContext.Provider>
   );

@@ -38,25 +38,25 @@ const handleUpdateRole = (userId, newRole) => {
     body: JSON.stringify({ role: newRole }),
   })
     .then((res) => {
-      // যদি রেসপন্স ২০০-২৯৯ এর বাইরে হয় (যেমন ৪0১ বা ৪0৩)
+      // If response is below 200-299 
       if (!res.ok) throw new Error("Failed to update"); 
       return res.json();
     })
     .then((data) => {
-      // সার্ভার ডাটা পাঠালে তবেই সাকসেস মেসেজ দিন
+      // Success messsgae if server send data
       Swal.fire({
         icon: "success",
         title: "Role Updated",
         text: `User role changed to ${newRole}`,
       });
       
-      // UI আপডেট করুন
+      // UI Update
       setUsers((prev) =>
         prev.map((u) => (u._id === userId ? { ...u, role: newRole } : u))
       );
     })
     .catch((err) => {
-      // কোনো এরর হলে এখানে আসবে
+      // If Error 
       Swal.fire("Error", "Could not update role. Try again!", "error");
       console.error(err);
     });

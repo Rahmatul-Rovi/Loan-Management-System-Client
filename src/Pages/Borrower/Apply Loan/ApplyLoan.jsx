@@ -43,7 +43,7 @@ const ApplyLoan = () => {
   }, []);
 
   // Fetch loan details
-  // Fetch loan details - Database field er namer shathe mil rekhe update kora hoyeche
+  // Fetch loan details 
   useEffect(() => {
     fetch(`http://localhost:3000/loans/${id}`)
       .then((res) => res.json())
@@ -51,7 +51,6 @@ const ApplyLoan = () => {
         setLoan(data);
         setLoading(false);
 
-        // Database-e thaka category ke Title hishebe ebong interest ke Rate hishebe set koro
         reset({
           borrowerEmail: user?.email || "",
           loanTitle: data.category || "No Title Found",

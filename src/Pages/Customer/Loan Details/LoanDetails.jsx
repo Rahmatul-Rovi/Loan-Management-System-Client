@@ -173,7 +173,7 @@ const LoanDetails = () => {
 
               {/* Check for both field names */}
               {/* Safe Mapping logic */}
-              {/* Smart EMI Logic: Data string holeo eita array baniye nibe */}
+              {/* Smart EMI Logic */}
               {(() => {
                 let rawPlans = loan?.emiPlans || loan?.availableEMIPlans;
                 let finalPlans = [];
@@ -192,7 +192,7 @@ const LoanDetails = () => {
                         finalPlans = JSON.parse(finalPlans);
                       }
                     } catch (e) {
-                      // Jodi normal comma separated string hoy: "60, 120"
+                      // If normal comma seperated: "60, 120"
                       finalPlans = rawPlans
                         .split(",")
                         .map((p) => p.trim().replace(/[\[\]"]/g, ""));

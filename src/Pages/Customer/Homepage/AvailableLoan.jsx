@@ -5,7 +5,7 @@ import { useNavigate } from "react-router";
 const AvailableLoan = () => {
   const [loans, setLoans] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [theme, setTheme] = useState("light"); // Add theme state
+  const [theme, setTheme] = useState("light"); 
   const navigate = useNavigate();
 
   // Observe theme changes
@@ -48,7 +48,6 @@ const AvailableLoan = () => {
   return (
     <div className="w-11/12 mx-auto py-14">
       {" "}
-      {/* Removed bg color */}
       {/* PREMIUM HEADER */}
       <div className="text-center mb-14">
         <h2 className="text-4xl font-extrabold bg-gradient-to-r from-[#003C8F] to-[#00B4D8] bg-clip-text text-transparent drop-shadow-sm">
