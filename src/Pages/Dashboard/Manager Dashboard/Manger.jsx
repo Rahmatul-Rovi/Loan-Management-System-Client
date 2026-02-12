@@ -88,9 +88,9 @@ const Manager = () => {
       icon: <FaFileAlt />,
     },
     {
-      path: '/dashboard/manager/manage-reviews', // পাথটি এখানে ঠিক করুন
-      label: 'Manage Reviews', // মেনুতে কি লেখা থাকবে
-      icon: <FaStar />, // FaStar ইমপোর্ট করে নিবেন
+      path: '/dashboard/manager/manage-reviews', 
+      label: 'Manage Reviews', 
+      icon: <FaStar />, 
     },
     {
       path: '/dashboard/manager/manager-profile',

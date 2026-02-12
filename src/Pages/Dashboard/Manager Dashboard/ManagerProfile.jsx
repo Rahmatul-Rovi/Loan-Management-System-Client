@@ -1,10 +1,10 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { FaSignOutAlt, FaUserEdit } from 'react-icons/fa';
-import { AuthContext } from '../../../Auth/AuthContext';
-import { signOut } from 'firebase/auth';
-import { auth } from '../../../Firebase.init';
-import Swal from 'sweetalert2';
+import React, { useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { FaSignOutAlt, FaUserEdit } from "react-icons/fa";
+import { AuthContext } from "../../../Auth/AuthContext";
+import { signOut } from "firebase/auth";
+import { auth } from "../../../Firebase.init";
+import Swal from "sweetalert2";
 
 const ManagerProfile = () => {
   const { user } = useContext(AuthContext);
@@ -12,19 +12,19 @@ const ManagerProfile = () => {
 
   // User Data State from Database
   const [dbUser, setDbUser] = useState(null);
-  const [formData, setFormData] = useState({ name: '', photoURL: '' });
+  const [formData, setFormData] = useState({ name: "", photoURL: "" });
   const [updating, setUpdating] = useState(false);
 
   useEffect(() => {
     if (user?.email) {
       fetch(`http://localhost:3000/users/by-email?email=${user.email}`)
-        .then(res => res.json())
-        .then(data => {
+        .then((res) => res.json())
+        .then((data) => {
           if (data && data.length > 0) {
             setDbUser(data[0]);
             setFormData({
-              name: data[0].name || '',
-              photoURL: data[0].photoURL || ''
+              name: data[0].name || "",
+              photoURL: data[0].photoURL || "",
             });
           }
         });
@@ -45,16 +45,23 @@ const ManagerProfile = () => {
     setUpdating(true);
 
     try {
-      const res = await fetch(`http://localhost:3000/users/update/${user?.email}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
-      });
+      const res = await fetch(
+        `http://localhost:3000/users/update/${user?.email}`,
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(formData),
+        },
+      );
       const data = await res.json();
 
       if (data.success) {
         // For User update db and UI
-        setDbUser({ ...dbUser, name: formData.name, photoURL: formData.photoURL });
+        setDbUser({
+          ...dbUser,
+          name: formData.name,
+          photoURL: formData.photoURL,
+        });
         Swal.fire("Success", "Profile Updated in Database!", "success");
       }
     } catch (error) {
@@ -67,28 +74,35 @@ const ManagerProfile = () => {
   const handleLogout = async () => {
     try {
       await signOut(auth);
-      navigate('/login', { replace: true });
+      navigate("/login", { replace: true });
     } catch (err) {
-      console.error('Logout failed:', err);
+      console.error("Logout failed:", err);
     }
   };
 
   return (
     <div className="p-6 max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 mt-10">
-      
       {/* --- Profile Card Start --- */}
       <div className="bg-white dark:bg-[#111B33] shadow-2xl rounded-3xl p-8 flex flex-col items-center border dark:border-gray-800">
         {/* Photo from database */}
         <img
-  // dbUser থেকে ডাটা না আসা পর্যন্ত user (AuthContext) এর ছবি দেখাবে
-  src={dbUser?.photoURL || user?.photoURL || 'https://i.ibb.co/L9n66vP/admin-avatar.png'}
-  alt="Profile"
-  className="w-32 h-32 rounded-full border-4 border-indigo-500 mb-6 object-cover shadow-lg"
-  onError={(e) => { e.target.src = 'https://i.ibb.co/L9n66vP/admin-avatar.png' }}
-/>
+          // Users profile pic show
+          src={
+            dbUser?.photoURL ||
+            user?.photoURL ||
+            "https://i.ibb.co/L9n66vP/admin-avatar.png"
+          }
+          alt="Profile"
+          className="w-32 h-32 rounded-full border-4 border-indigo-500 mb-6 object-cover shadow-lg"
+          onError={(e) => {
+            e.target.src = "https://i.ibb.co/L9n66vP/admin-avatar.png";
+          }}
+        />
 
         {/* Name from database */}
-        <h2 className="text-3xl font-black text-gray-800 dark:text-white mb-1">{dbUser.name || "Manager Name"}</h2>
+        <h2 className="text-3xl font-black text-gray-800 dark:text-white mb-1">
+          {dbUser.name || "Manager Name"}
+        </h2>
         <p className="text-indigo-500 font-medium mb-6">{dbUser.email}</p>
 
         <div className="w-full space-y-4 text-gray-700 dark:text-gray-300">
@@ -117,46 +131,53 @@ const ManagerProfile = () => {
       {/* --- Profile Edit form --- */}
       <div className="bg-white dark:bg-[#111B33] shadow-2xl rounded-3xl p-8 border dark:border-gray-800">
         <div className="flex items-center gap-3 mb-8 text-indigo-600 dark:text-indigo-400">
-            <FaUserEdit className="text-3xl" />
-            <h2 className="text-2xl font-black italic">Settings</h2>
+          <FaUserEdit className="text-3xl" />
+          <h2 className="text-2xl font-black italic">Settings</h2>
         </div>
-        
+
         <form onSubmit={handleUpdate} className="space-y-6">
           <div>
-            <label className="block text-sm font-bold text-gray-600 dark:text-gray-400 mb-2">Update Name</label>
-            <input 
-              type="text" 
+            <label className="block text-sm font-bold text-gray-600 dark:text-gray-400 mb-2">
+              Update Name
+            </label>
+            <input
+              type="text"
               className="w-full p-4 rounded-2xl border dark:bg-[#0A122A] dark:border-gray-700 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
               value={formData.name}
-              onChange={(e) => setFormData({...formData, name: e.target.value})}
+              onChange={(e) =>
+                setFormData({ ...formData, name: e.target.value })
+              }
               placeholder="Your new name"
               required
             />
           </div>
 
           <div>
-            <label className="block text-sm font-bold text-gray-600 dark:text-gray-400 mb-2">New Photo URL</label>
-            <input 
-              type="text" 
+            <label className="block text-sm font-bold text-gray-600 dark:text-gray-400 mb-2">
+              New Photo URL
+            </label>
+            <input
+              type="text"
               className="w-full p-4 rounded-2xl border dark:bg-[#0A122A] dark:border-gray-700 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
               value={formData.photoURL}
-              onChange={(e) => setFormData({...formData, photoURL: e.target.value})}
+              onChange={(e) =>
+                setFormData({ ...formData, photoURL: e.target.value })
+              }
               placeholder="Paste image link here"
               required
             />
           </div>
 
-          <button 
-            type="submit" 
+          <button
+            type="submit"
             disabled={updating}
             className={`w-full py-4 rounded-2xl font-black text-white uppercase tracking-widest shadow-xl transition-all
-              ${updating ? 'bg-gray-400 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700 transform hover:scale-[1.02]'}`}
+              ${updating ? "bg-gray-400 cursor-not-allowed" : "bg-indigo-600 hover:bg-indigo-700 transform hover:scale-[1.02]"}`}
           >
             {updating ? "Processing..." : "Update Profile"}
           </button>
         </form>
       </div>
-
     </div>
   );
 };

@@ -34,7 +34,7 @@ const AdminChart = () => {
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 {/* --- Bar Chart --- */}
-                <div className="bg-white dark:bg-[#111B33] p-6 rounded-3xl shadow-lg border border-gray-100 dark:border-gray-800">
+                <div className="bg-white text-white dark:bg-[#111B33] p-6 rounded-3xl shadow-lg border border-gray-100 dark:border-gray-800">
                     <h2 className="text-xl font-bold mb-6">Loan Distribution</h2>
                     <div style={{ width: '100%', height: 300 }}>
                         <ResponsiveContainer>
@@ -53,7 +53,7 @@ const AdminChart = () => {
 
                 {/* --- Pie Chart --- */}
                 <div className="bg-white dark:bg-[#111B33] p-6 rounded-3xl shadow-lg border border-gray-100 dark:border-gray-800">
-                    <h2 className="text-xl font-bold mb-6">Market Share (Status)</h2>
+                    <h2 className="text-xl text-white font-bold mb-6">Market Share (Status)</h2>
                     <div style={{ width: '100%', height: 300 }}>
                         <ResponsiveContainer>
                             <PieChart>
@@ -71,7 +71,7 @@ const AdminChart = () => {
     );
 };
 
-// ছোট কার্ড কম্পোনেন্ট
+// Small Card Component
 const StatCard = ({ title, value, icon, color }) => (
     <div className="bg-white dark:bg-[#111B33] p-6 rounded-3xl shadow-md border border-gray-100 dark:border-gray-800 flex items-center space-x-4">
         <div className={`${color} p-4 rounded-2xl text-white text-2xl`}>{icon}</div>

@@ -74,7 +74,7 @@ const ManagerManageLoan = () => {
 
   // Open update modal
   const openUpdateModal = (loan) => {
-    setSelectedLoan({ ...loan }); // create copy for editing
+    setSelectedLoan({ ...loan }); 
     setUpdateModalOpen(true);
   };
 
@@ -108,7 +108,7 @@ const ManagerManageLoan = () => {
     setUpdateLoading(true);
 
     try {
-      const { _id, ...updateData } = selectedLoan; // Remove _id from body
+      const { _id, ...updateData } = selectedLoan; 
       const res = await fetch(`http://localhost:3000/loans/${_id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },

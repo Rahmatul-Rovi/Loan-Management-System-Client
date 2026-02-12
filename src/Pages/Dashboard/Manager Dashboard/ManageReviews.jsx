@@ -24,7 +24,7 @@ const ManageReviews = () => {
             confirmButtonColor: "#EF4444",
             cancelButtonColor: "#374151",
             confirmButtonText: "Yes, delete it!",
-            background: '#1F2937', // SweetAlert background matching theme
+            background: '#1F2937', 
             color: '#fff'
         }).then((result) => {
             if (result.isConfirmed) {

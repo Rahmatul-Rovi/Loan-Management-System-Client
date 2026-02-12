@@ -6,7 +6,7 @@ const ManagerApproveApp = () => {
   const [loading, setLoading] = useState(true);
   const [selectedLoan, setSelectedLoan] = useState(null);
 
-  // --- সার্চ এবং ফিল্টার স্টেট ---
+  // --- Search and filter state ---
   const [searchText, setSearchText] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
   const [sortOrder, setSortOrder] = useState('newest'); // newest, oldest, highAmount, lowAmount
@@ -30,21 +30,21 @@ const ManagerApproveApp = () => {
     fetchAllData();
   }, [token]);
 
-  // --- সার্চ এবং ফিল্টার লজিক ---
+  // --- Search and filter logic ---
   const filteredApplications = applications
     .filter((app) => {
-      // ১. ইমেইল বা নাম দিয়ে সার্চ
+      // Search by email and name
       const matchesSearch = 
         app.borrowerEmail?.toLowerCase().includes(searchText.toLowerCase()) || 
         app.fullName?.toLowerCase().includes(searchText.toLowerCase());
       
-      // ২. স্ট্যাটাস দিয়ে ফিল্টার
+      // Filter with status
       const matchesStatus = filterStatus === 'all' || app.status === filterStatus;
 
       return matchesSearch && matchesStatus;
     })
     .sort((a, b) => {
-      // ৩. সর্টিং লজিক
+      // Sorting Logic
       if (sortOrder === 'newest') return new Date(b.createdAt) - new Date(a.createdAt);
       if (sortOrder === 'oldest') return new Date(a.createdAt) - new Date(b.createdAt);
       if (sortOrder === 'highAmount') return Number(b.loanAmount) - Number(a.loanAmount);
@@ -52,7 +52,7 @@ const ManagerApproveApp = () => {
       return 0;
     });
 
-  // --- Stats Calculation (সব ডাটার ওপর ভিত্তি করে) ---
+  // --- Stats Calculation  ---
   const stats = {
     totalApproved: applications.filter(app => app.status === 'approved' || app.status === 'disbursed').length,
     totalRejected: applications.filter(app => app.status === 'rejected').length,
@@ -179,7 +179,7 @@ const ManagerApproveApp = () => {
         </table>
       </div>
 
-      {/* --- Modal (আপনার আগের কোডই আছে) --- */}
+      {/* --- Modal --- */}
       {selectedLoan && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center px-4">
           <div className="bg-white rounded-2xl w-full max-w-lg p-8 shadow-2xl">
