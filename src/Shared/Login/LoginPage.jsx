@@ -86,43 +86,43 @@ const LoginPage = () => {
   };
 
   const handleGoogleSignIn = async () => {
-    setLoading(true);
-    try {
-      const result = await googleSignIn();
-      const firebaseUser = result.user;
+  setLoading(true);
+  try {
+    const result = await googleSignIn();
+    const firebaseUser = result.user;
 
-      const res = await fetch(
-        `http://localhost:3000/users/by-email?email=${firebaseUser.email}`
-      );
+    const saveRes = await fetch('http://localhost:3000/users', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: firebaseUser.displayName,
+        email: firebaseUser.email,
+        photoURL: firebaseUser.photoURL,
+        role: 'borrower', 
+      }),
+    });
 
-      let users = [];
-      if (res.ok) users = await res.json();
-
-      let role = users.length ? users[0].role : 'borrower';
-
-      if (!users.length) {
-        await fetch('http://localhost:3000/users', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            name: firebaseUser.displayName,
-            email: firebaseUser.email,
-            photoURL: firebaseUser.photoURL,
-            role,
-          }),
-        });
+    const res = await fetch(`http://localhost:3000/users/by-email?email=${firebaseUser.email}`);
+    let role = 'borrower';
+    
+    if (res.ok) {
+      const users = await res.json();
+      if (users.length > 0) {
+        role = users[0].role;
       }
-
-      localStorage.setItem('role', role);
-      toast.success(`Logged in as ${role}`);
-      redirectByRole(role);
-    } catch (error) {
-      console.error(error);
-      toast.error('Google login failed');
-    } finally {
-      setLoading(false);
     }
-  };
+
+    localStorage.setItem('role', role);
+    toast.success(`Logged in successfully!`);
+    redirectByRole(role);
+    
+  } catch (error) {
+    console.error("Google Sign-In Error:", error);
+    toast.error('Google login failed');
+  } finally {
+    setLoading(false);
+  }
+};
 
   const handleForgotPassword = async () => {
     if (!resetEmail) {

@@ -31,7 +31,7 @@ const RegisterPage = () => {
         body: JSON.stringify({
           name: data.name,
           email: data.email,
-          password: data.password, // ✅ REQUIRED
+          password: data.password, //  REQUIRED
           role: data.role,         // borrower | manager
           photoURL: data.photoURL,
         }),
