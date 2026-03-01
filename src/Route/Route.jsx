@@ -41,6 +41,7 @@ export const router = createBrowserRouter([
       { path: "testimonials", element: <Testimonials></Testimonials> },
       { path: "/all-loans", element: <AllLoans /> },
       { path: "/all-loans/:id", element: <LoanDetails /> },
+      { path: "/loan-details/:id", element: <LoanDetails /> },
       { path: "/apply-loan/:id", element: <ApplyLoan /> },
     ],
   },
@@ -85,7 +86,7 @@ export const router = createBrowserRouter([
         ],
       },
 
-    // ✅ Manager Panel
+    // Manager Panel
       {
         path: "manager",
         element: <Manager />,
