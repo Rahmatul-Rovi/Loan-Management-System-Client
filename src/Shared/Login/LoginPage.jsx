@@ -6,6 +6,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { AuthContext } from '../../Auth/AuthContext';
 import { sendPasswordResetEmail } from 'firebase/auth';
 import { auth } from '../../Firebase.init';
+import { FaGoogle } from 'react-icons/fa';
 
 const LoginPage = () => {
   const { signInUser, googleSignIn } = useContext(AuthContext);
@@ -200,7 +201,7 @@ const LoginPage = () => {
             onClick={handleGoogleSignIn}
             className="btn w-full mt-2 border border-gray-300 flex justify-center gap-2"
           >
-            <BookOpenIcon size={18} />
+            <FaGoogle size={18} />
             Login with Google
           </button>
         </form>
