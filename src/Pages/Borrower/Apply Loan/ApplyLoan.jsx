@@ -42,7 +42,6 @@ const ApplyLoan = () => {
     updateTheme();
   }, []);
 
-  // Fetch loan details
   // Fetch loan details 
   useEffect(() => {
     fetch(`http://localhost:3000/loans/${id}`)

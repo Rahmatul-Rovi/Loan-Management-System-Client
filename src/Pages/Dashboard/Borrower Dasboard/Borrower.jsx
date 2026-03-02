@@ -102,9 +102,6 @@ const Borrower = () => {
           {activePage === 'give-review' && <GiveReview theme={theme} />}
         </main>
 
-        <div className="flex-shrink-0">
-          <Footer theme={theme} />
-        </div>
       </div>
     </div>
   );
