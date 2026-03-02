@@ -45,6 +45,7 @@ const Borrower = () => {
     { key: 'my-loans', label: 'My Loans', icon: <FaMoneyCheckAlt /> },
     { key: 'payment-history', label: 'Payment History', icon: <FaHistory /> },
     { key: 'give-review', label: 'Give Review', icon: <FaRegStar /> }, // New Item
+    { key: '/', label: 'Give Review', icon: <FaRegStar /> }, // New Item
   ];
 
   const bgClass = theme === 'dark' ? 'bg-gray-900' : 'bg-gray-50';
