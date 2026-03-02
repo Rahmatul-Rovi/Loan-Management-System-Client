@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { FaUser, FaMoneyCheckAlt, FaAngleDown, FaTimes, FaHistory, FaRegStar } from 'react-icons/fa'; // Added FaRegStar
+import { FaUser, FaMoneyCheckAlt, FaAngleDown, FaTimes, FaHistory, FaRegStar, FaHome } from 'react-icons/fa'; // Added FaRegStar
 import Navbar from '../../../Shared/Navbar/Navbar';
 import Footer from '../../../Shared/Footer/Footer';
 import BorrowerProfile from './BorrowerProfile';
@@ -45,7 +45,7 @@ const Borrower = () => {
     { key: 'my-loans', label: 'My Loans', icon: <FaMoneyCheckAlt /> },
     { key: 'payment-history', label: 'Payment History', icon: <FaHistory /> },
     { key: 'give-review', label: 'Give Review', icon: <FaRegStar /> }, // New Item
-    { key: '/', label: 'Give Review', icon: <FaRegStar /> }, // New Item
+    { key: 'home', label: 'Back to Home', icon: <FaHome /> }, // New Item
   ];
 
   const bgClass = theme === 'dark' ? 'bg-gray-900' : 'bg-gray-50';
