@@ -59,13 +59,13 @@ const BorrowerProfile = ({ theme = 'light' }) => {
 
         <div className="px-6 pb-8 text-center">
           <div className="relative -mt-12 mb-4">
-            <img
-              src={user?.photoURL || 'https://i.ibb.co/3S3s8V3/user-placeholder.png'}
-              alt="User"
-              loading="lazy"
-              onError={(e) => (e.target.src = 'https://i.ibb.co/3S3s8V3/user-placeholder.png')}
-              className="w-24 h-24 rounded-2xl border-4 border-white dark:border-[#111B33] shadow-lg object-cover mx-auto transition-all duration-300"
-            />
+          <img
+
+  src={auth.currentUser?.photoURL || user?.photoURL || 'https://i.ibb.co/3S3s8V3/user-placeholder.png'}
+  alt="User"
+  className="w-24 h-24 rounded-2xl border-4 border-white object-cover mx-auto"
+  onError={(e) => (e.target.src = 'https://i.ibb.co/3S3s8V3/user-placeholder.png')}
+/>
           </div>
 
           <div className="mb-6">
