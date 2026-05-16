@@ -10,7 +10,7 @@ const ManageReviews = () => {
     }, []);
 
     const fetchReviews = () => {
-        fetch('http://localhost:3000/reviews')
+        fetch('https://loan-server-theta.vercel.app/reviews')
             .then(res => res.json())
             .then(data => setReviews(data));
     };
@@ -28,7 +28,7 @@ const ManageReviews = () => {
             color: '#fff'
         }).then((result) => {
             if (result.isConfirmed) {
-                fetch(`http://localhost:3000/reviews/${id}`, {
+                fetch(`https://loan-server-theta.vercel.app/reviews/${id}`, {
                     method: 'DELETE'
                 })
                 .then(res => res.json())

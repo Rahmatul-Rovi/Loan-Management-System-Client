@@ -30,7 +30,7 @@ const LoginPage = () => {
 
     try {
       // ---------------- Admin Login ----------------
-      const adminRes = await fetch('http://localhost:3000/login', {
+      const adminRes = await fetch('https://loan-server-theta.vercel.app/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
@@ -53,7 +53,7 @@ const LoginPage = () => {
       const firebaseUser = result.user;
 
       const res = await fetch(
-        `http://localhost:3000/users/by-email?email=${firebaseUser.email}`
+        `https://loan-server-theta.vercel.app/users/by-email?email=${firebaseUser.email}`
       );
 
       let users = [];
@@ -63,7 +63,7 @@ const LoginPage = () => {
 
       // Auto-create borrower if not exists
       if (!users.length) {
-        await fetch('http://localhost:3000/users', {
+        await fetch('https://loan-server-theta.vercel.app/users', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -92,7 +92,7 @@ const LoginPage = () => {
     const result = await googleSignIn();
     const firebaseUser = result.user;
 
-    const saveRes = await fetch('http://localhost:3000/users', {
+    const saveRes = await fetch('https://loan-server-theta.vercel.app/users', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -103,7 +103,7 @@ const LoginPage = () => {
       }),
     });
 
-    const res = await fetch(`http://localhost:3000/users/by-email?email=${firebaseUser.email}`);
+    const res = await fetch(`https://loan-server-theta.vercel.app/users/by-email?email=${firebaseUser.email}`);
     let role = 'borrower';
     
     if (res.ok) {

@@ -17,7 +17,7 @@ const CheckoutForm = ({ app, closeModal, refreshData }) => {
     if (amountToPay > 0) {
       console.log("Creating Payment Intent for:", amountToPay);
 
-      fetch("http://localhost:3000/create-payment-intent", {
+      fetch("https://loan-server-theta.vercel.app/create-payment-intent", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ amount: amountToPay }),
@@ -63,7 +63,7 @@ const CheckoutForm = ({ app, closeModal, refreshData }) => {
         penaltyPaid: app?.isOverdue ? app.penaltyAmount : 0 // extra chage for record 
       };
 
-      await fetch(`http://localhost:3000/applications/pay/${app._id}`, {
+      await fetch(`https://loan-server-theta.vercel.app/applications/pay/${app._id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(paymentInfo),

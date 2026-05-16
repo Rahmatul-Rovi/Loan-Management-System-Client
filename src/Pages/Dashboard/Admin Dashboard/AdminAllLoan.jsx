@@ -10,7 +10,7 @@ const AdminAllLoan = () => {
 
   // Fetch loans
   useEffect(() => {
-    fetch("http://localhost:3000/loans", {
+    fetch("https://loan-server-theta.vercel.app/loans", {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => res.json())
@@ -37,7 +37,7 @@ const AdminAllLoan = () => {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        fetch(`http://localhost:3000/loans/${loanId}`, {
+        fetch(`https://loan-server-theta.vercel.app/loans/${loanId}`, {
           method: "DELETE",
           headers: { Authorization: `Bearer ${token}` },
         })
@@ -52,7 +52,7 @@ const AdminAllLoan = () => {
 
   const handleSendMoney = async (applicationId) => {
     const res = await fetch(
-      `http://localhost:3000/payment/admin/send/${applicationId}`,
+      `https://loan-server-theta.vercel.app/payment/admin/send/${applicationId}`,
       {
         method: "POST",
         headers: {
@@ -91,7 +91,7 @@ const AdminAllLoan = () => {
 
   // Save updates
   const handleSave = () => {
-    fetch(`http://localhost:3000/loans/${selectedLoan._id}`, {
+    fetch(`https://loan-server-theta.vercel.app/loans/${selectedLoan._id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -122,7 +122,7 @@ const AdminAllLoan = () => {
     const repayAmount = prompt("Enter total repay amount:");
     const deadline = prompt("Enter deadline (YYYY-MM-DD):");
 
-    await fetch(`http://localhost:3000/applications/approve/${id}`, {
+    await fetch(`https://loan-server-theta.vercel.app/applications/approve/${id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ repayAmount, deadline }),

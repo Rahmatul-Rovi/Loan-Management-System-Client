@@ -16,7 +16,7 @@ const ManagerApproveApp = () => {
   useEffect(() => {
     const fetchAllData = async () => {
       try {
-        const res = await fetch('http://localhost:3000/applications', {
+        const res = await fetch('https://loan-server-theta.vercel.app/applications', {
           headers: { Authorization: `Bearer ${token}` },
         });
         const data = await res.json();

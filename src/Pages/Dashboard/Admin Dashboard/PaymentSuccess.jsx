@@ -7,7 +7,7 @@ const PaymentSuccess = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch(`http://localhost:3000/applications/pay/${id}`, {
+    fetch(`https://loan-server-theta.vercel.app/applications/pay/${id}`, {
       method: "PATCH",
     })
       .then(() => {

@@ -15,7 +15,7 @@ const ManagerManageLoan = () => {
   useEffect(() => {
     const fetchLoans = async () => {
       try {
-        const res = await fetch("http://localhost:3000/loans");
+        const res = await fetch("https://loan-server-theta.vercel.app/loans");
         const data = await res.json();
         setLoans(data);
         setFilteredLoans(data);
@@ -55,7 +55,7 @@ const ManagerManageLoan = () => {
 
     if (confirmed.isConfirmed) {
       try {
-        const res = await fetch(`http://localhost:3000/loans/${id}`, {
+        const res = await fetch(`https://loan-server-theta.vercel.app/loans/${id}`, {
           method: "DELETE",
           headers: { "Content-Type": "application/json" },
         });
@@ -109,7 +109,7 @@ const ManagerManageLoan = () => {
 
     try {
       const { _id, ...updateData } = selectedLoan; 
-      const res = await fetch(`http://localhost:3000/loans/${_id}`, {
+      const res = await fetch(`https://loan-server-theta.vercel.app/loans/${_id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(updateData),

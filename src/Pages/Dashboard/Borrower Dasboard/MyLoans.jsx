@@ -43,7 +43,7 @@ const MyLoans = () => {
   const fetchApplications = async () => {
     if (!user?.email) return;
     try {
-      const res = await fetch(`http://localhost:3000/applications/${encodeURIComponent(user.email)}`);
+      const res = await fetch(`https://loan-server-theta.vercel.app/applications/${encodeURIComponent(user.email)}`);
       const data = await res.json();
 
       if (Array.isArray(data)) {
@@ -104,7 +104,7 @@ const MyLoans = () => {
 
     if (result.isConfirmed) {
       try {
-        const res = await fetch(`http://localhost:3000/applications/${loanId}`, { method: "DELETE" });
+        const res = await fetch(`https://loan-server-theta.vercel.app/applications/${loanId}`, { method: "DELETE" });
         if (res.ok) {
           setApplications((prev) => prev.filter((app) => app._id !== loanId));
           Swal.fire("Cancelled!", "Application removed.", "success");

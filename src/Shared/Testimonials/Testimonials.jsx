@@ -6,7 +6,7 @@ const Testimonials = () => {
   const [loading, setLoading] = useState(true); // New Loading State
 
   useEffect(() => {
-    fetch('http://localhost:3000/reviews')
+    fetch('https://loan-server-theta.vercel.app/reviews')
       .then(res => res.json())
       .then(data => {
         setReviews(data);

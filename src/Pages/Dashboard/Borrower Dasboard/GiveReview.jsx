@@ -24,7 +24,7 @@ const GiveReview = () => {
     };
 
     try {
-      const res = await fetch('http://localhost:3000/reviews', {
+      const res = await fetch('https://loan-server-theta.vercel.app/reviews', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify(reviewData)

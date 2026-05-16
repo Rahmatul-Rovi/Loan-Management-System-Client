@@ -11,7 +11,7 @@ const ManagerPendingApp = () => {
 
   const fetchLoans = async () => {
     try {
-      const res = await fetch("http://localhost:3000/applications", {
+      const res = await fetch("https://loan-server-theta.vercel.app/applications", {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await res.json();
@@ -74,7 +74,7 @@ const ManagerPendingApp = () => {
 
     try {
       const res = await fetch(
-        `http://localhost:3000/applications/approve/${loan._id}`,
+        `https://loan-server-theta.vercel.app/applications/approve/${loan._id}`,
         {
           method: "PATCH",
           headers: {
@@ -111,7 +111,7 @@ const ManagerPendingApp = () => {
     if (!result.isConfirmed) return;
     try {
       const res = await fetch(
-        `http://localhost:3000/applications/${id}/reject`,
+        `https://loan-server-theta.vercel.app/applications/${id}/reject`,
         {
           method: "PATCH",
           headers: { Authorization: `Bearer ${token}` },
@@ -136,7 +136,7 @@ const ManagerPendingApp = () => {
     });
     try {
       const res = await fetch(
-        `http://localhost:3000/payment/admin/send/${app._id}`,
+        `https://loan-server-theta.vercel.app/payment/admin/send/${app._id}`,
         {
           method: "POST",
           headers: {

@@ -10,7 +10,7 @@ const AdminChart = () => {
     const COLORS = ['#6366f1', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'];
 
     useEffect(() => {
-        fetch("http://localhost:3000/admin-stats")
+        fetch("https://loan-server-theta.vercel.app/admin-stats")
             .then(res => res.json())
             .then(resData => {
                 setData(resData.chartData);

@@ -17,7 +17,7 @@ const ManagerProfile = () => {
 
   useEffect(() => {
     if (user?.email) {
-      fetch(`http://localhost:3000/users/by-email?email=${user.email}`)
+      fetch(`https://loan-server-theta.vercel.app/users/by-email?email=${user.email}`)
         .then((res) => res.json())
         .then((data) => {
           if (data && data.length > 0) {
@@ -46,7 +46,7 @@ const ManagerProfile = () => {
 
     try {
       const res = await fetch(
-        `http://localhost:3000/users/update/${user?.email}`,
+        `https://loan-server-theta.vercel.app/users/update/${user?.email}`,
         {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },

@@ -33,7 +33,7 @@ const LoanDetails = () => {
 
   // Fetch Loan Data
   useEffect(() => {
-    fetch(`http://localhost:3000/loans/${id}`)
+    fetch(`https://loan-server-theta.vercel.app/loans/${id}`)
       .then((res) => res.json())
       .then((data) => {
         setLoan(data);

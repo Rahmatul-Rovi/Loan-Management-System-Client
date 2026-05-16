@@ -8,7 +8,7 @@ const PaymentHistory = () => {
 
  useEffect(() => {
   // From backend route
-  fetch(`http://localhost:3000/transactions/${user?.email}`)
+  fetch(`https://loan-server-theta.vercel.app/transactions/${user?.email}`)
     .then(res => res.json())
     .then(data => setPayments(data));
 }, [user?.email]);

@@ -11,7 +11,7 @@ const ManageUser = () => {
 
   // Fetch users
   useEffect(() => {
-    fetch("http://localhost:3000/users", {
+    fetch("https://loan-server-theta.vercel.app/users", {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => res.json())
@@ -29,7 +29,7 @@ const ManageUser = () => {
   // Update role
  // Update role
 const handleUpdateRole = (userId, newRole) => {
-  fetch(`http://localhost:3000/users/${userId}`, {
+  fetch(`https://loan-server-theta.vercel.app/users/${userId}`, {
     method: "PATCH",
     headers: { 
       "Content-Type": "application/json", 
@@ -70,7 +70,7 @@ const handleUpdateRole = (userId, newRole) => {
 
   const submitSuspend = () => {
     const { userId } = suspendModal;
-    fetch(`http://localhost:3000/users/${userId}`, {
+    fetch(`https://loan-server-theta.vercel.app/users/${userId}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
       body: JSON.stringify({
