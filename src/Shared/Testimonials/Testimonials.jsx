@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { FaStar, FaQuoteLeft } from 'react-icons/fa';
+import { motion } from 'framer-motion';
 
 const Testimonials = () => {
   const [reviews, setReviews] = useState([]);
-  const [loading, setLoading] = useState(true); // New Loading State
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetch('https://loan-server-theta.vercel.app/reviews')
       .then(res => res.json())
       .then(data => {
         setReviews(data);
-        setLoading(false); // Stop loading
+        setLoading(false);
       })
       .catch(err => {
         console.error(err);
@@ -18,52 +19,85 @@ const Testimonials = () => {
       });
   }, []);
 
-  // Show a spinner or text while waiting for the database
   if (loading) {
-    return <div className="py-20 text-center font-bold">Loading Testimonials...</div>;
+    return (
+      <div className="py-20 text-center font-bold text-black">
+        Loading Testimonials...
+      </div>
+    );
   }
 
-  // If the database is actually empty, show this instead of nothing
   if (reviews.length === 0) {
     return (
       <div className="py-20 text-center">
-        <h2 className="text-2xl font-bold text-gray-400">No reviews found in database.</h2>
-        <p>Go to your dashboard and add a review first!</p>
+        <h2 className="text-2xl font-bold text-black">No reviews found in database.</h2>
+        <p className="text-black mt-2">Go to your dashboard and add a review first!</p>
       </div>
     );
   }
 
   return (
-    <section className="py-20 bg-gray-50 dark:bg-[#0A122A]">
+    <section className="py-24 bg-white">
       <div className="max-w-7xl mx-auto px-6">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-black text-gray-800 dark:text-white mb-4 italic">Client Feedbacks</h2>
-          <p className="text-gray-500 dark:text-gray-400">What our borrowers say about QuickLoan service.</p>
-        </div>
 
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7 }}
+          className="text-center mb-16"
+        >
+          <span className="inline-block px-4 py-1.5 rounded-full bg-info/10 text-info text-sm font-semibold mb-4 border border-info/20">
+            Testimonials
+          </span>
+          <h2 className="text-4xl md:text-5xl font-black text-black mb-4">
+            Client{' '}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-info">
+              Feedbacks
+            </span>
+          </h2>
+          <p className="text-black/60 text-lg">
+            What our borrowers say about QuickLoan service.
+          </p>
+        </motion.div>
+
+        {/* Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {reviews.map((rev) => (
-            <div key={rev._id} className="bg-white dark:bg-[#111B33] p-8 rounded-[2.5rem] shadow-xl border dark:border-gray-800 hover:scale-105 transition-transform duration-300">
-              <FaQuoteLeft className="text-4xl text-blue-500/20 mb-4" />
-              <p className="text-gray-600 dark:text-gray-300 mb-6 italic leading-relaxed">
+          {reviews.map((rev, i) => (
+            <motion.div
+              key={rev._id}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: i * 0.1 }}
+              whileHover={{ y: -6, transition: { duration: 0.25 } }}
+              className="group bg-[#0B132B] p-8 rounded-3xl shadow-lg border border-white/10 hover:border-info/40 hover:shadow-2xl transition-all duration-300"
+            >
+              <FaQuoteLeft className="text-4xl text-info/40 mb-4" />
+              <p className="text-white mb-6 italic leading-relaxed">
                 "{rev.comment}"
               </p>
-              <div className="flex items-center gap-4 border-t dark:border-gray-800 pt-6">
-                <img 
-                  src={rev.photo || "https://i.ibb.co/3S3s8V3/user-placeholder.png"} 
-                  className="w-14 h-14 rounded-2xl object-cover border-2 border-blue-500" 
-                  alt={rev.name} 
+              <div className="flex items-center gap-4 border-t border-white/10 pt-6">
+                <img
+                  src={rev.photo || "https://i.ibb.co/3S3s8V3/user-placeholder.png"}
+                  className="w-14 h-14 rounded-2xl object-cover border-2 border-info"
+                  alt={rev.name}
                 />
                 <div>
-                  <h4 className="font-black text-gray-800 dark:text-white">{rev.name}</h4>
+                  <h4 className="font-black text-white">{rev.name}</h4>
                   <div className="flex text-yellow-400 text-sm mt-1">
                     {[...Array(Number(rev.rating) || 0)].map((_, i) => <FaStar key={i} />)}
                   </div>
                 </div>
               </div>
-            </div>
+
+              {/* Bottom accent line */}
+              <div className="mt-5 h-0.5 w-0 group-hover:w-full bg-gradient-to-r from-primary to-info transition-all duration-500 rounded-full"></div>
+            </motion.div>
           ))}
         </div>
+
       </div>
     </section>
   );
