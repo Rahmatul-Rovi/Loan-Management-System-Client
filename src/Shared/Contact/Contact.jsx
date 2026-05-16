@@ -22,7 +22,7 @@ const Contact = () => {
             Touch
           </span>
         </h2>
-        <p className="text-gray-700 dark:text-gray-400 text-lg leading-relaxed">
+        <p className="text-gray-700 dark:text-gray-500 text-lg leading-relaxed">
           Have questions or need support? Fill out the form and our team will get back to you promptly.
         </p>
       </motion.div>
@@ -45,22 +45,22 @@ const Contact = () => {
                 <label className="block text-sm font-semibold text-gray-700 dark:text-gray-500 mb-2">Full Name</label>
                 <input
                   type="text"
-                  placeholder="John Doe"
+                  placeholder="Enter Your Name"
                   className="w-full p-4 rounded-xl bg-gray-50 dark:bg-deep-navy text-gray-800 dark:text-text-primary placeholder-gray-400 dark:placeholder-text-secondary border border-gray-200 dark:border-white/10 focus:outline-none focus:ring-2 focus:ring-info transition-all"
                 />
               </div>
               <div>
-                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Email Address</label>
+                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-500 mb-2">Email Address</label>
                 <input
                   type="email"
-                  placeholder="john@example.com"
+                  placeholder="Enter your Email"
                   className="w-full p-4 rounded-xl bg-gray-50 dark:bg-deep-navy text-gray-800 dark:text-text-primary placeholder-gray-400 dark:placeholder-text-secondary border border-gray-200 dark:border-white/10 focus:outline-none focus:ring-2 focus:ring-info transition-all"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Subject</label>
+              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-500 mb-2">Subject</label>
               <input
                 type="text"
                 placeholder="How can we help?"
@@ -69,7 +69,7 @@ const Contact = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Message</label>
+              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-500 mb-2">Message</label>
               <textarea
                 rows={5}
                 placeholder="Write your message here..."
@@ -83,7 +83,7 @@ const Contact = () => {
               type="submit"
               className="w-full py-4 rounded-xl bg-info text-white font-bold hover:bg-info/90 shadow-lg transition-all"
             >
-              Send Message 🚀
+              Send Message
             </motion.button>
           </form>
         </motion.div>
@@ -112,7 +112,7 @@ const Contact = () => {
                 {item.icon}
               </div>
               <div>
-                <p className="font-bold text-gray-800 dark:text-gray-200 mb-0.5">{item.title}</p>
+                <p className="font-bold text-gray-800 dark:text-gray-500 mb-0.5">{item.title}</p>
                 <p className="text-info font-semibold text-sm">{item.desc}</p>
                 <p className="text-gray-500 dark:text-gray-400 text-xs mt-0.5">{item.sub}</p>
               </div>
