@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { useNavigate } from 'react-router';
 import { 
   FaMoneyBillWave, 
   FaGraduationCap, 
@@ -18,7 +17,6 @@ import Marquee from 'react-fast-marquee';
 const Catagory = () => {
   const [loans, setLoans] = useState([]);
   const [theme, setTheme] = useState('light');
-  const navigate = useNavigate();
 
   // Detect theme changes
   useEffect(() => {
@@ -111,12 +109,11 @@ const Catagory = () => {
               initial={{ scale: 0.95 }}
               animate={{ scale: 1 }}
               transition={{ duration: 0.3 }}
-              className={`flex-shrink-0 w-56 md:w-60 rounded-xl p-6 flex flex-col items-center text-center cursor-pointer transition-all duration-300 ${
+              className={`flex-shrink-0 w-56 md:w-60 rounded-xl p-6 flex flex-col items-center text-center cursor-default transition-all duration-300 ${
                 theme === 'dark'
-                  ? 'bg-[#111B33]/80 border border-[#1E293B] text-[#E2E8F0] hover:border-purple-500'
-                  : 'bg-white/90 border border-gray-200 text-[#1F2937] hover:border-purple-400'
+                  ? 'bg-[#111B33]/80 border border-[#1E293B] text-[#E2E8F0]'
+                  : 'bg-white/90 border border-gray-200 text-[#1F2937]'
               } backdrop-blur-md shadow-lg`}
-              onClick={() => navigate(`/category/${category.toLowerCase().replace(/\s+/g, '-')}`)}
             >
               <div className="mb-3">{getCategoryIcon(category)}</div>
               <h3 className="text-lg md:text-xl font-semibold mb-1 line-clamp-1">{category}</h3>
