@@ -39,27 +39,29 @@ const AvailableLoan = () => {
 
   if (loading) {
     return (
-      <div className={`flex justify-center items-center h-screen`}>
-        <p className={`text-lg animate-pulse`}>Loading available loans...</p>
+      <div className="flex flex-col justify-center items-center h-[60vh] gap-4">
+        <div className="w-12 h-12 border-4 border-purple-500 border-t-transparent rounded-full animate-spin"></div>
+        <p className={`text-lg font-medium animate-pulse ${theme === "dark" ? "text-purple-400" : "text-indigo-600"}`}>
+          Loading available loans...
+        </p>
       </div>
     );
   }
 
   return (
-    <div className="w-11/12 mx-auto py-14">
-      {" "}
+    <div className="w-11/12 mx-auto py-20 overflow-hidden">
       {/* PREMIUM HEADER */}
-      <div className="text-center mb-14">
-        <h2 className="text-4xl font-extrabold bg-gradient-to-r from-[#003C8F] to-[#00B4D8] bg-clip-text text-transparent drop-shadow-sm">
+      <div className="text-center mb-16">
+        <h2 className="text-3xl md:text-4xl font-extrabold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent drop-shadow-sm">
           Explore Our Exclusive Loan Plans
         </h2>
         <p
-          className={`text-lg mt-3 ${theme === "dark" ? "text-[#94A3B8]" : "text-gray-600"}`}
+          className={`text-base md:text-lg mt-3 max-w-2xl mx-auto ${theme === "dark" ? "text-[#94A3B8]" : "text-gray-600"}`}
         >
-          Select from a curated range of premium loan options tailored for your
-          financial needs.
+          Select from a curated range of premium loan options tailored specifically to empower your financial journey.
         </p>
       </div>
+
       {/* PREMIUM GRID */}
       <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
         {loans.map((loan, index) => (
@@ -69,28 +71,28 @@ const AvailableLoan = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.1, duration: 0.6 }}
             whileHover={{
-              scale: 1.05,
+              scale: 1.04,
               boxShadow:
                 theme === "dark"
-                  ? "0 20px 40px rgba(30,144,255,0.4)"
-                  : "0 15px 30px rgba(0,60,143,0.2)",
+                  ? "0 25px 50px -12px rgba(139,92,246,0.25)"
+                  : "0 20px 35px -10px rgba(99,102,241,0.15)",
             }}
-            className={`relative w-full rounded-2xl border overflow-hidden cursor-pointer flex flex-col ${
+            className={`relative w-full rounded-3xl border overflow-hidden cursor-pointer flex flex-col transition-all duration-300 ${
               theme === "dark"
-                ? "bg-[#111B33] border-[#1E293B]"
-                : "bg-white border-[#E5E7EB]"
+                ? "bg-[#111B33]/80 border-[#1E293B] hover:border-purple-500/50"
+                : "bg-white border-gray-100 shadow-md hover:border-indigo-400/50"
             }`}
             onClick={() => navigate(`/loan-details/${loan._id}`)}
           >
             {/* Loan Image */}
-            <div className="relative">
+            <div className="relative h-48 overflow-hidden">
               <motion.img
-               src={loan?.image || loan?.loanImage}
+                src={loan?.image || loan?.loanImage}
                 alt={loan.loanTitle || loan.category}
-                className="w-full h-48 object-cover"
-                animate={{ y: [0, -10, 0] }}
+                className="w-full h-full object-cover"
+                animate={{ y: [0, -6, 0] }}
                 transition={{
-                  duration: 5,
+                  duration: 6,
                   repeat: Infinity,
                   ease: "easeInOut",
                 }}
@@ -98,54 +100,49 @@ const AvailableLoan = () => {
               <div
                 className={`absolute inset-0 bg-gradient-to-t ${
                   theme === "dark"
-                    ? "from-black/50 via-transparent"
-                    : "from-black/20 via-transparent"
+                    ? "from-[#111B33] via-transparent to-transparent"
+                    : "from-black/10 via-transparent to-transparent"
                 }`}
               />
             </div>
 
             {/* Loan Info */}
-            <div className="p-4 flex flex-col flex-1 justify-between">
-              <div>
+            <div className="p-5 flex flex-col flex-1 justify-between relative z-10">
+              <div className="mb-4">
                 <h3
-                  className={`text-xl font-bold mb-2 truncate ${
+                  className={`text-lg font-bold mb-3 truncate bg-gradient-to-r from-purple-500 to-indigo-500 bg-clip-text hover:text-transparent transition-all duration-300 ${
                     theme === "dark" ? "text-[#E2E8F0]" : "text-[#1F2937]"
                   }`}
                 >
                   {loan.loanTitle}
                 </h3>
-                <p
-                  className={`text-sm mb-1 ${
-                    theme === "dark" ? "text-[#94A3B8]" : "text-gray-500"
-                  }`}
-                >
-                  <span className="font-medium">Category:</span> {loan.category}
-                </p>
-                <p
-                  className={`text-sm mb-1 ${
-                    theme === "dark" ? "text-[#94A3B8]" : "text-gray-500"
-                  }`}
-                >
-                  <span className="font-medium">Interest:</span>{" "}
-                 {loan?.interestRate || loan?.interest || "0"}%
-                </p>
-                <p
-                  className={`text-sm mb-3 ${
-                    theme === "dark" ? "text-[#94A3B8]" : "text-gray-500"
-                  }`}
-                >
-                  <span className="font-medium">Max Limit:</span> $
-                  {loan?.maxLimit ? loan.maxLimit.toLocaleString() : "0"}
-                </p>
+                
+                <div className="space-y-1.5">
+                  <p className={`text-sm flex justify-between ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>
+                    <span className="font-medium opacity-75">Category:</span>
+                    <span className="font-semibold">{loan.category}</span>
+                  </p>
+                  <p className={`text-sm flex justify-between ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>
+                    <span className="font-medium opacity-75">Interest Rate:</span>
+                    <span className="font-semibold text-emerald-500">{loan?.interestRate || loan?.interest || "0"}%</span>
+                  </p>
+                  <p className={`text-sm flex justify-between ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>
+                    <span className="font-medium opacity-75">Max Limit:</span>
+                    <span className="font-bold text-purple-500">
+                      ${loan?.maxLimit ? loan.maxLimit.toLocaleString() : "0"}
+                    </span>
+                  </p>
+                </div>
               </div>
 
               {/* View Details Button */}
               <motion.button
-                whileHover={{ scale: 1.05 }}
-                className={`w-full py-2 rounded-xl font-semibold transition-all ${
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                className={`w-full py-2.5 rounded-xl font-semibold transition-all duration-300 ${
                   theme === "dark"
-                    ? "bg-[#1E90FF] hover:bg-[#00E0FF] text-[#0A122A] shadow-xl"
-                    : "bg-[#003C8F] hover:bg-[#1E4C9A] text-white shadow-lg"
+                    ? "bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white shadow-lg shadow-purple-900/30"
+                    : "bg-indigo-600 hover:bg-indigo-700 text-white shadow-md shadow-indigo-200"
                 }`}
                 onClick={(e) => {
                   e.stopPropagation();
@@ -160,8 +157,8 @@ const AvailableLoan = () => {
             {theme === "dark" && (
               <>
                 <motion.div
-                  className="absolute top-2 left-2 w-10 h-10 bg-[#00E0FF]/20 rounded-full blur-2xl"
-                  animate={{ scale: [1, 1.3, 1] }}
+                  className="absolute top-2 left-2 w-16 h-16 bg-purple-500/10 rounded-full blur-2xl pointer-events-none"
+                  animate={{ scale: [1, 1.2, 1] }}
                   transition={{
                     duration: 6,
                     repeat: Infinity,
@@ -169,8 +166,8 @@ const AvailableLoan = () => {
                   }}
                 />
                 <motion.div
-                  className="absolute bottom-4 right-4 w-12 h-12 bg-[#1E90FF]/20 rounded-full blur-2xl"
-                  animate={{ scale: [1, 1.4, 1] }}
+                  className="absolute bottom-4 right-4 w-16 h-16 bg-indigo-500/10 rounded-full blur-2xl pointer-events-none"
+                  animate={{ scale: [1, 1.3, 1] }}
                   transition={{
                     duration: 7,
                     repeat: Infinity,
@@ -182,11 +179,12 @@ const AvailableLoan = () => {
           </motion.div>
         ))}
       </div>
+
       {/* SEE MORE BUTTON */}
-      <div className="text-center mt-12">
+      <div className="text-center mt-16">
         <button
           onClick={() => navigate("/all-loans")}
-          className="px-8 py-3 bg-gradient-to-r from-[#003C8F] to-[#00B4D8] text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all tracking-wide"
+          className="px-8 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 tracking-wide transform hover:-translate-y-0.5"
         >
           See More →
         </button>
