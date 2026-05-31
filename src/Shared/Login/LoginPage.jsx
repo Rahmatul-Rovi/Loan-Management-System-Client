@@ -141,7 +141,7 @@ const LoginPage = () => {
   return (
     <div className="flex items-center justify-center min-h-screen bg-white px-4">
       <div className="w-full max-w-md bg-white p-8 rounded-2xl shadow-lg">
-        <h2 className="text-3xl font-extrabold text-center text-gray-800 mb-4">
+        <h2 className="text-3xl font-extrabold text-center text-violet-600 mb-4">
           Login to Your Account
         </h2>
 
@@ -208,7 +208,7 @@ const LoginPage = () => {
 
         <p className="text-center mt-4 text-gray-700">
           Don’t have an account?{' '}
-          <Link to="/register" className="text-blue-600 font-semibold">
+          <Link to="/register" className="text-violet-600 font-semibold">
             Sign Up
           </Link>
         </p>
