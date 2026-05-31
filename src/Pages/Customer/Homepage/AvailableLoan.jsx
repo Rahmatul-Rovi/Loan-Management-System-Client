@@ -5,7 +5,7 @@ import { useNavigate } from "react-router";
 const AvailableLoan = () => {
   const [loans, setLoans] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [theme, setTheme] = useState("light"); 
+  const [theme, setTheme] = useState("light");
   const navigate = useNavigate();
 
   // Observe theme changes
@@ -41,7 +41,9 @@ const AvailableLoan = () => {
     return (
       <div className="flex flex-col justify-center items-center h-[60vh] gap-4">
         <div className="w-12 h-12 border-4 border-purple-500 border-t-transparent rounded-full animate-spin"></div>
-        <p className={`text-lg font-medium animate-pulse ${theme === "dark" ? "text-purple-400" : "text-indigo-600"}`}>
+        <p
+          className={`text-lg font-medium animate-pulse ${theme === "dark" ? "text-purple-400" : "text-indigo-600"}`}
+        >
           Loading available loans...
         </p>
       </div>
@@ -58,7 +60,8 @@ const AvailableLoan = () => {
         <p
           className={`text-base md:text-lg mt-3 max-w-2xl mx-auto ${theme === "dark" ? "text-[#94A3B8]" : "text-gray-600"}`}
         >
-          Select from a curated range of premium loan options tailored specifically to empower your financial journey.
+          Select from a curated range of premium loan options tailored
+          specifically to empower your financial journey.
         </p>
       </div>
 
@@ -86,16 +89,19 @@ const AvailableLoan = () => {
           >
             {/* Loan Image */}
             <div className="relative h-48 overflow-hidden">
-              <motion.img
-                src={loan?.image || loan?.loanImage}
-                alt={loan.loanTitle || loan.category}
+              <img
+                src={
+                  loan?.image ||
+                  loan?.loanImage ||
+                  "https://i.ibb.co/L8N7pYv/placeholder.jpg"
+                }
+                alt={
+                  loan?.loanTitle ||
+                  loan?.title ||
+                  loan?.category ||
+                  "Loan Image"
+                }
                 className="w-full h-full object-cover"
-                animate={{ y: [0, -6, 0] }}
-                transition={{
-                  duration: 6,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }}
               />
               <div
                 className={`absolute inset-0 bg-gradient-to-t ${
@@ -116,17 +122,27 @@ const AvailableLoan = () => {
                 >
                   {loan.loanTitle}
                 </h3>
-                
+
                 <div className="space-y-1.5">
-                  <p className={`text-sm flex justify-between ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>
+                  <p
+                    className={`text-sm flex justify-between ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}
+                  >
                     <span className="font-medium opacity-75">Category:</span>
                     <span className="font-semibold">{loan.category}</span>
                   </p>
-                  <p className={`text-sm flex justify-between ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>
-                    <span className="font-medium opacity-75">Interest Rate:</span>
-                    <span className="font-semibold text-emerald-500">{loan?.interestRate || loan?.interest || "0"}%</span>
+                  <p
+                    className={`text-sm flex justify-between ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}
+                  >
+                    <span className="font-medium opacity-75">
+                      Interest Rate:
+                    </span>
+                    <span className="font-semibold text-emerald-500">
+                      {loan?.interestRate || loan?.interest || "0"}
+                    </span>
                   </p>
-                  <p className={`text-sm flex justify-between ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>
+                  <p
+                    className={`text-sm flex justify-between ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}
+                  >
                     <span className="font-medium opacity-75">Max Limit:</span>
                     <span className="font-bold text-purple-500">
                       ${loan?.maxLimit ? loan.maxLimit.toLocaleString() : "0"}

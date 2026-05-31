@@ -51,8 +51,10 @@ const LoanDetails = () => {
       Swal.fire({
         icon: "warning",
         title: "Login Required",
-        text: "Please login before applying for a loan.",
-        confirmButtonColor: theme === "dark" ? "#00E0FF" : "#003C8F",
+        text: "You need to log in to your account before applying for a loan.",
+        confirmButtonColor: theme === "dark" ? "#A855F7" : "#6D28D9",
+        background: theme === "dark" ? "#111B33" : "#FFFFFF", 
+        color: theme === "dark" ? "#E2E8F0" : "#1F2937",
       });
       return;
     }
