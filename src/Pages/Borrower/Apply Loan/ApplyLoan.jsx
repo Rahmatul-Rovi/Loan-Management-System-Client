@@ -42,7 +42,7 @@ const ApplyLoan = () => {
     updateTheme();
   }, []);
 
-  // Fetch loan details 
+  // Fetch loan details
   useEffect(() => {
     fetch(`https://loan-server-theta.vercel.app/loans/${id}`)
       .then((res) => res.json())
@@ -73,11 +73,14 @@ const ApplyLoan = () => {
     };
 
     try {
-      const res = await fetch("https://loan-server-theta.vercel.app/apply-loan", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
+      const res = await fetch(
+        "https://loan-server-theta.vercel.app/apply-loan",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        },
+      );
       await res.json();
 
       Swal.fire({
@@ -119,7 +122,7 @@ const ApplyLoan = () => {
           theme === "dark" ? "bg-[#111B33]" : "bg-white"
         }`}
       >
-        <h2 className="text-3xl font-bold mb-6">Apply for {loan.category}</h2>
+        <h2 className="text-3xl text-violet-600 font-bold mb-6">Apply for {loan.category}</h2>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           {/* Auto-filled fields */}
@@ -247,17 +250,17 @@ const ApplyLoan = () => {
             )}
           </div>
 
-        <button
-  type="submit"
-  disabled={submitting}
-  className={`w-full py-3 rounded-xl font-bold text-lg shadow-xl transition-colors duration-200 ${
-    theme === "dark"
-      ? "bg-[#A855F7] text-white hover:bg-[#9333EA]" // Dark Mode: Vibrant Violet
-      : "bg-[#6D28D9] text-white hover:bg-[#5B21B6]" // Light Mode: Rich Deep Violet
-  } ${submitting ? "opacity-50 cursor-not-allowed" : ""}`}
->
-  {submitting ? "Submitting..." : "Submit Application"}
-</button>
+          <button
+            type="submit"
+            disabled={submitting}
+            className={`w-full py-3 rounded-xl font-bold text-lg shadow-xl transition-colors duration-200 ${
+              theme === "dark"
+                ? "bg-[#A855F7] text-white hover:bg-[#9333EA]"
+                : "bg-[#6D28D9] text-white hover:bg-[#5B21B6]" 
+            } ${submitting ? "opacity-50 cursor-not-allowed" : ""}`}
+          >
+            {submitting ? "Submitting..." : "Submit Application"}
+          </button>
         </form>
       </div>
     </div>
