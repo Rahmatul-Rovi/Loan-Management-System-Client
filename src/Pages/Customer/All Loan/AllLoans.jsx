@@ -8,7 +8,7 @@ const AllLoans = () => {
   const [loading, setLoading] = useState(true);
   const [theme, setTheme] = useState("light");
   const [error, setError] = useState("");
-  
+
   // Search & Filter States
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
@@ -68,13 +68,14 @@ const AllLoans = () => {
 
     if (selectedCategory !== "All") {
       result = result.filter(
-        (loan) => loan.category?.toLowerCase() === selectedCategory.toLowerCase()
+        (loan) =>
+          loan.category?.toLowerCase() === selectedCategory.toLowerCase(),
       );
     }
 
     if (searchTerm.trim() !== "") {
       result = result.filter((loan) =>
-        loan.loanTitle?.toLowerCase().includes(searchTerm.toLowerCase())
+        loan.loanTitle?.toLowerCase().includes(searchTerm.toLowerCase()),
       );
     }
 
@@ -82,13 +83,20 @@ const AllLoans = () => {
   }, [searchTerm, selectedCategory, loans]);
 
   // Extract unique categories for the filter dropdown
-  const categories = ["All", ...new Set(loans.map((loan) => loan.category).filter(Boolean))];
+  const categories = [
+    "All",
+    ...new Set(loans.map((loan) => loan.category).filter(Boolean)),
+  ];
 
   if (loading) {
     return (
-      <div className={`flex flex-col justify-center items-center h-screen ${theme === "dark" ? "bg-[#0A122A]" : "bg-[#F8FAFC]"} gap-4`}>
+      <div
+        className={`flex flex-col justify-center items-center h-screen ${theme === "dark" ? "bg-[#0A122A]" : "bg-[#F8FAFC]"} gap-4`}
+      >
         <div className="w-12 h-12 border-4 border-purple-500 border-t-transparent rounded-full animate-spin"></div>
-        <p className={`text-lg font-medium animate-pulse ${theme === "dark" ? "text-purple-400" : "text-indigo-600"}`}>
+        <p
+          className={`text-lg font-medium animate-pulse ${theme === "dark" ? "text-purple-400" : "text-indigo-600"}`}
+        >
           Loading all exclusive loans...
         </p>
       </div>
@@ -97,9 +105,15 @@ const AllLoans = () => {
 
   if (error) {
     return (
-      <div className={`flex justify-center items-center h-screen ${theme === "dark" ? "bg-[#0A122A]" : "bg-[#F8FAFC]"}`}>
-        <div className={`p-6 rounded-2xl border text-center max-w-sm ${theme === "dark" ? "bg-[#111B33] border-red-500/30 text-red-400" : "bg-white border-red-200 text-red-600"} shadow-xl`}>
-          <p className="text-lg font-semibold mb-2">Ops! Something went wrong</p>
+      <div
+        className={`flex justify-center items-center h-screen ${theme === "dark" ? "bg-[#0A122A]" : "bg-[#F8FAFC]"}`}
+      >
+        <div
+          className={`p-6 rounded-2xl border text-center max-w-sm ${theme === "dark" ? "bg-[#111B33] border-red-500/30 text-red-400" : "bg-white border-red-200 text-red-600"} shadow-xl`}
+        >
+          <p className="text-lg font-semibold mb-2">
+            Ops! Something went wrong
+          </p>
           <p className="text-sm opacity-80">{error}</p>
         </div>
       </div>
@@ -107,24 +121,32 @@ const AllLoans = () => {
   }
 
   return (
-    <div className={`${theme === "dark" ? "bg-[#0A122A]" : "bg-[#F8FAFC]"} py-16 px-4 md:px-8 min-h-screen flex flex-col items-center transition-colors duration-300`}>
-      
+    <div
+      className={`${theme === "dark" ? "bg-[#0A122A]" : "bg-[#F8FAFC]"} py-16 px-4 md:px-8 min-h-screen flex flex-col items-center transition-colors duration-300`}
+    >
       {/* HEADER SECTION */}
       <div className="text-center mb-12 max-w-2xl">
         <h2 className="text-3xl md:text-5xl font-extrabold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent drop-shadow-sm mb-4">
           All Available Financial Plans
         </h2>
-        <p className={`text-sm md:text-base ${theme === "dark" ? "text-[#94A3B8]" : "text-gray-600"}`}>
-          Browse through our comprehensive directory of premium lending options. Filter, search, and secure the perfect match for your requirements.
+        <p
+          className={`text-sm md:text-base ${theme === "dark" ? "text-[#94A3B8]" : "text-gray-600"}`}
+        >
+          Browse through our comprehensive directory of premium lending options.
+          Filter, search, and secure the perfect match for your requirements.
         </p>
       </div>
 
       {/* CONTROLS (SEARCH & FILTER) */}
-      <div className={`w-11/12 lg:w-3/4 mb-12 p-4 rounded-2xl border flex flex-col sm:flex-row gap-4 items-center justify-between ${
-        theme === "dark" ? "bg-[#111B33]/60 border-[#1E293B]" : "bg-white border-gray-100 shadow-sm"
-      }`}>
+      <div
+        className={`w-11/12 lg:w-3/4 mb-12 p-4 rounded-2xl border flex flex-col sm:flex-row gap-4 items-center justify-between ${
+          theme === "dark"
+            ? "bg-[#111B33]/60 border-[#1E293B]"
+            : "bg-white border-gray-100 shadow-sm"
+        }`}
+      >
         {/* Search Bar */}
-        <div className="relative w-full sm:w-2/3">
+        {/* <div className="relative w-full sm:w-2/3">
           <input
             type="text"
             placeholder="Search by loan title..."
@@ -137,7 +159,7 @@ const AllLoans = () => {
             }`}
           />
           <span className="absolute right-3 top-3 opacity-40 text-sm">🔍</span>
-        </div>
+        </div> */}
 
         {/* Category Dropdown */}
         <div className="relative w-full sm:w-1/3">
@@ -151,7 +173,11 @@ const AllLoans = () => {
             }`}
           >
             {categories.map((cat) => (
-              <option key={cat} value={cat} className={theme === "dark" ? "bg-[#111B33]" : "bg-white"}>
+              <option
+                key={cat}
+                value={cat}
+                className={theme === "dark" ? "bg-[#111B33]" : "bg-white"}
+              >
                 {cat === "All" ? "All Categories" : cat}
               </option>
             ))}
@@ -184,16 +210,14 @@ const AllLoans = () => {
             >
               {/* Loan Image */}
               <div className="relative h-48 overflow-hidden">
-                <motion.img
-                  src={loan?.image || loan?.loanImage || "https://i.ibb.co/L8N7pYv/placeholder.jpg"}
-                  alt={loan.loanTitle}
+                <img
+                  src={
+                    loan?.image ||
+                    loan?.loanImage ||
+                    "https://i.ibb.co/L8N7pYv/placeholder.jpg"
+                  }
+                  alt={loan?.loanTitle || loan?.title || "Loan Image"}
                   className="w-full h-full object-cover"
-                  animate={{ y: [0, -6, 0] }}
-                  transition={{
-                    duration: 6,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                  }}
                 />
                 <div
                   className={`absolute inset-0 bg-gradient-to-t ${
@@ -214,22 +238,35 @@ const AllLoans = () => {
                   >
                     {loan.loanTitle}
                   </h3>
-                  
+
                   <div className="space-y-1.5">
-                    <p className={`text-sm flex justify-between ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>
+                    <p
+                      className={`text-sm flex justify-between ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}
+                    >
                       <span className="font-medium opacity-75">Category:</span>
-                      <span className="font-semibold">{loan.category || "N/A"}</span>
-                    </p>
-                    <p className={`text-sm flex justify-between ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>
-                      <span className="font-medium opacity-75">Interest Rate:</span>
-                      <span className="font-semibold text-emerald-500">
-                        {loan?.interestRate || loan?.interest || "0"}%
+                      <span className="font-semibold">
+                        {loan.category || "N/A"}
                       </span>
                     </p>
-                    <p className={`text-sm flex justify-between ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>
+                    <p
+                      className={`text-sm flex justify-between ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}
+                    >
+                      <span className="font-medium opacity-75">
+                        Interest Rate:
+                      </span>
+                      <span className="font-semibold text-emerald-500">
+                        {loan?.interestRate || loan?.interest || "0"}
+                      </span>
+                    </p>
+                    <p
+                      className={`text-sm flex justify-between ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}
+                    >
                       <span className="font-medium opacity-75">Max Limit:</span>
                       <span className="font-bold text-purple-500">
-                        ${loan?.maxLimit ? Number(loan.maxLimit).toLocaleString() : "0"}
+                        $
+                        {loan?.maxLimit
+                          ? Number(loan.maxLimit).toLocaleString()
+                          : "0"}
                       </span>
                     </p>
                   </div>
@@ -280,7 +317,9 @@ const AllLoans = () => {
           ))
         ) : (
           <div className="col-span-full text-center py-12">
-            <p className={`text-lg font-medium ${theme === "dark" ? "text-gray-400" : "text-gray-500"}`}>
+            <p
+              className={`text-lg font-medium ${theme === "dark" ? "text-gray-400" : "text-gray-500"}`}
+            >
               🔍 No loans match your criteria.
             </p>
           </div>
