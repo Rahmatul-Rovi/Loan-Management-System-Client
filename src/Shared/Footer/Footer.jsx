@@ -3,17 +3,17 @@ import { Link } from "react-router";
 
 const Footer = () => {
   return (
-    <footer className="bg-base-200 text-base-content pt-5">
+    <footer className="bg-[#111B33] text-[#E2E8F0] pt-5 border-t border-gray-800">
       <div className="max-w-7xl mx-auto px-6 py-10 grid sm:grid-cols-2 md:grid-cols-4 gap-8">
         {/* Logo & Description */}
         <div className="space-y-3">
           <Link
             to="/"
-            className="text-2xl font-extrabold text-primary tracking-wide hover:text-primary-focus transition-colors"
+            className="text-2xl font-extrabold text-[#A855F7] tracking-wide hover:text-[#9333EA] transition-colors duration-200"
           >
             QuickLoan
           </Link>
-          <p className="text-gray-500">
+          <p className="text-gray-400 text-sm">
             Connecting you to loans seamlessly. Reliable, fast, and transparent
             since 2025.
           </p>
@@ -21,17 +21,17 @@ const Footer = () => {
 
         {/* Quick Links */}
         <div className="space-y-2">
-          <h6 className="font-semibold text-gray-700 uppercase">Quick Links</h6>
-          <ul className="space-y-1">
+          <h6 className="font-semibold text-gray-300 uppercase tracking-wider text-sm">Quick Links</h6>
+          <ul className="space-y-1.5 text-sm">
             <li>
-              <Link to="/" className="hover:text-primary transition-colors">
+              <Link to="/" className="text-gray-400 hover:text-[#A855F7] transition-colors duration-200">
                 Home
               </Link>
             </li>
             <li>
               <Link
                 to="/all-loans"
-                className="hover:text-primary transition-colors"
+                className="text-gray-400 hover:text-[#A855F7] transition-colors duration-200"
               >
                 All Loans
               </Link>
@@ -39,7 +39,7 @@ const Footer = () => {
             <li>
               <Link
                 to="/about"
-                className="hover:text-primary transition-colors"
+                className="text-gray-400 hover:text-[#A855F7] transition-colors duration-200"
               >
                 About Us
               </Link>
@@ -47,7 +47,7 @@ const Footer = () => {
             <li>
               <Link
                 to="/contact"
-                className="hover:text-primary transition-colors"
+                className="text-gray-400 hover:text-[#A855F7] transition-colors duration-200"
               >
                 Contact
               </Link>
@@ -55,48 +55,30 @@ const Footer = () => {
           </ul>
         </div>
 
-        {/* Resources */}
+        {/* Resources (FIXED: Links removed, just showing text cleanly) */}
         <div className="space-y-2">
-          <h6 className="font-semibold text-gray-700 uppercase">Resources</h6>
-          <ul className="space-y-1">
-            <li>
-              <Link to="/faq" className="hover:text-primary transition-colors">
-                FAQ
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/terms"
-                className="hover:text-primary transition-colors"
-              >
-                Terms of Service
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/privacy"
-                className="hover:text-primary transition-colors"
-              >
-                Privacy Policy
-              </Link>
-            </li>
+          <h6 className="font-semibold text-gray-300 uppercase tracking-wider text-sm">Resources</h6>
+          <ul className="space-y-1.5 text-sm text-gray-400">
+            <li className="cursor-default hover:text-gray-300 transition-colors">FAQ</li>
+            <li className="cursor-default hover:text-gray-300 transition-colors">Terms of Service</li>
+            <li className="cursor-default hover:text-gray-300 transition-colors">Privacy Policy</li>
           </ul>
         </div>
 
         {/* Social & Contact */}
         <div className="space-y-3">
-          <h6 className="font-semibold text-gray-700 uppercase">Follow Us</h6>
-          <div className="flex space-x-4 text-gray-500">
+          <h6 className="font-semibold text-gray-300 uppercase tracking-wider text-sm">Follow Us</h6>
+          <div className="flex space-x-4 text-gray-400">
             <a
               href="https://twitter.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:text-primary transition-colors"
+              className="hover:text-[#A855F7] transition-colors duration-200"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
+                width="22"
+                height="22"
                 fill="currentColor"
                 viewBox="0 0 24 24"
               >
@@ -107,12 +89,12 @@ const Footer = () => {
               href="https://youtube.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:text-primary transition-colors"
+              className="hover:text-[#A855F7] transition-colors duration-200"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
+                width="22"
+                height="22"
                 fill="currentColor"
                 viewBox="0 0 24 24"
               >
@@ -123,12 +105,12 @@ const Footer = () => {
               href="https://facebook.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:text-primary transition-colors"
+              className="hover:text-[#A855F7] transition-colors duration-200"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
+                width="22"
+                height="22"
                 fill="currentColor"
                 viewBox="0 0 24 24"
               >
@@ -136,7 +118,7 @@ const Footer = () => {
               </svg>
             </a>
           </div>
-          <p className="text-gray-400 text-sm mt-3">
+          <p className="text-gray-500 text-xs mt-3">
             © 2025 QuickLoan. All rights reserved.
           </p>
         </div>
