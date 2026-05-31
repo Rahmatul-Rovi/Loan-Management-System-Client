@@ -118,16 +118,16 @@ const LoanDetails = () => {
       />
 
       <div className="max-w-7xl mx-auto w-11/12 relative z-10">
-       <button
-  onClick={() => navigate(-1)}
-  className={`mb-6 px-5 py-3 rounded-lg font-semibold transition-colors duration-200 shadow-md ${
-    theme === "dark"
-      ? "bg-[#7C3AED] text-white hover:bg-[#6D28D9]" // Dark Mode: Cool Violet
-      : "bg-[#8B5CF6] text-white hover:bg-[#7C3AED]" // Light Mode: Bright Violet
-  }`}
->
-  ← Back
-</button>
+        <button
+          onClick={() => navigate(-1)}
+          className={`mb-6 px-5 py-3 rounded-lg font-semibold transition-colors duration-200 shadow-md ${
+            theme === "dark"
+              ? "bg-[#7C3AED] text-white hover:bg-[#6D28D9]"
+              : "bg-[#8B5CF6] text-white hover:bg-[#7C3AED]"
+          }`}
+        >
+          ← Back
+        </button>
 
         <div
           className={`rounded-3xl shadow-2xl overflow-hidden ${
@@ -138,15 +138,17 @@ const LoanDetails = () => {
         >
           <div className="md:flex">
             {/* Left: Loan Image */}
-            <motion.div className="md:w-1/2">
-              <motion.img
-                src={loan?.image || loan?.loanImage}
-                alt={loan.loanTitle}
+            <div className="md:w-1/2">
+              <img
+                src={
+                  loan?.image ||
+                  loan?.loanImage ||
+                  "https://i.ibb.co/L8N7pYv/placeholder.jpg"
+                }
+                alt={loan?.loanTitle || loan?.title || "Loan Plan"}
                 className="w-full h-full object-cover md:h-[500px]"
-                animate={{ y: [0, -10, 0] }}
-                transition={{ duration: 5, repeat: Infinity }}
               />
-            </motion.div>
+            </div>
 
             {/* Right: Loan Info */}
             <div className="md:w-1/2 p-8">
@@ -228,7 +230,7 @@ const LoanDetails = () => {
                 onClick={handleApplyNow}
                 className={`mt-8 w-full py-4 rounded-2xl font-bold text-lg shadow-xl transition-colors duration-200 ${
                   theme === "dark"
-                    ? "bg-[#A855F7] text-white hover:bg-[#9333EA]" 
+                    ? "bg-[#A855F7] text-white hover:bg-[#9333EA]"
                     : "bg-[#6D28D9] text-white hover:bg-[#5B21B6]"
                 }`}
               >
