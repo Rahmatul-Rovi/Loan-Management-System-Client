@@ -20,11 +20,11 @@ const RegisterPage = () => {
 
   const onSubmit = async (data) => {
     try {
-      // 1️⃣ Create user in Firebase
+      // Create user in Firebase
       await createUser(data.email, data.password);
       await addProfileInfo(data.name, data.photoURL);
 
-      // 2️⃣ Save user to MongoDB (PUBLIC ROUTE)
+      // Save user to MongoDB (PUBLIC ROUTE)
       const res = await fetch('https://loan-server-theta.vercel.app/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -41,7 +41,7 @@ const RegisterPage = () => {
         throw new Error('MongoDB registration failed');
       }
 
-      // 3️⃣ Logout to prevent auto-login
+      // Logout to prevent auto-login
       await signOut(auth);
 
       Swal.fire({
@@ -64,7 +64,7 @@ const RegisterPage = () => {
   return (
     <div className="flex items-center justify-center min-h-screen bg-base-200 px-4">
       <div className="w-full max-w-md bg-base-100 p-8 rounded-2xl shadow-xl">
-        <h2 className="text-3xl font-extrabold text-center text-primary mb-4">
+        <h2 className="text-3xl font-extrabold text-center text-violet-600 mb-4">
           Create an Account
         </h2>
 
@@ -126,7 +126,7 @@ const RegisterPage = () => {
 
         <p className="text-center mt-4">
           Already have an account?{' '}
-          <Link to="/login" className="text-primary font-semibold">
+          <Link to="/login" className="text-violet-600 font-semibold">
             Log In
           </Link>
         </p>
