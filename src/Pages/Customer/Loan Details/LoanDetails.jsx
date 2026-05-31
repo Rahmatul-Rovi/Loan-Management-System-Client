@@ -118,16 +118,16 @@ const LoanDetails = () => {
       />
 
       <div className="max-w-7xl mx-auto w-11/12 relative z-10">
-        <button
-          onClick={() => navigate(-1)}
-          className={`mb-6 px-5 py-3 rounded-lg font-semibold ${
-            theme === "dark"
-              ? "bg-[#1E90FF] text-[#0A122A] hover:bg-[#00E0FF]"
-              : "bg-[#003C8F] text-white hover:bg-[#1E4C9A]"
-          }`}
-        >
-          ← Back
-        </button>
+       <button
+  onClick={() => navigate(-1)}
+  className={`mb-6 px-5 py-3 rounded-lg font-semibold transition-colors duration-200 shadow-md ${
+    theme === "dark"
+      ? "bg-[#7C3AED] text-white hover:bg-[#6D28D9]" // Dark Mode: Cool Violet
+      : "bg-[#8B5CF6] text-white hover:bg-[#7C3AED]" // Light Mode: Bright Violet
+  }`}
+>
+  ← Back
+</button>
 
         <div
           className={`rounded-3xl shadow-2xl overflow-hidden ${
@@ -183,11 +183,9 @@ const LoanDetails = () => {
                     finalPlans = rawPlans;
                   } else if (typeof rawPlans === "string") {
                     try {
-                     
                       let cleanStr = rawPlans.trim();
                       finalPlans = JSON.parse(cleanStr);
 
-                  
                       if (typeof finalPlans === "string") {
                         finalPlans = JSON.parse(finalPlans);
                       }
@@ -225,17 +223,17 @@ const LoanDetails = () => {
               })()}
 
               <motion.button
-  whileHover={{ scale: 1.05 }}
-  whileTap={{ scale: 0.95 }}
-  onClick={handleApplyNow}
-  className={`mt-8 w-full py-4 rounded-2xl font-bold text-lg shadow-xl transition-colors duration-200 ${
-    theme === "dark"
-      ? "bg-[#A855F7] text-white hover:bg-[#9333EA]" // Dark Mode: Vibrant Violet
-      : "bg-[#6D28D9] text-white hover:bg-[#5B21B6]" // Light Mode: Rich Deep Violet
-  }`}
->
-  Apply Now
-</motion.button>
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={handleApplyNow}
+                className={`mt-8 w-full py-4 rounded-2xl font-bold text-lg shadow-xl transition-colors duration-200 ${
+                  theme === "dark"
+                    ? "bg-[#A855F7] text-white hover:bg-[#9333EA]" 
+                    : "bg-[#6D28D9] text-white hover:bg-[#5B21B6]"
+                }`}
+              >
+                Apply Now
+              </motion.button>
             </div>
           </div>
         </div>
