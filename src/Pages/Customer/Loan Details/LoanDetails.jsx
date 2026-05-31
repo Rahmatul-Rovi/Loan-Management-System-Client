@@ -225,16 +225,17 @@ const LoanDetails = () => {
               })()}
 
               <motion.button
-                whileHover={{ scale: 1.05 }}
-                onClick={handleApplyNow}
-                className={`mt-8 w-full py-4 rounded-2xl font-bold text-lg shadow-xl ${
-                  theme === "dark"
-                    ? "bg-[#00E0FF] text-[#0A122A] hover:bg-[#1E90FF]"
-                    : "bg-[#003C8F] text-white hover:bg-[#1E4C9A]"
-                }`}
-              >
-                Apply Now
-              </motion.button>
+  whileHover={{ scale: 1.05 }}
+  whileTap={{ scale: 0.95 }}
+  onClick={handleApplyNow}
+  className={`mt-8 w-full py-4 rounded-2xl font-bold text-lg shadow-xl transition-colors duration-200 ${
+    theme === "dark"
+      ? "bg-[#A855F7] text-white hover:bg-[#9333EA]" // Dark Mode: Vibrant Violet
+      : "bg-[#6D28D9] text-white hover:bg-[#5B21B6]" // Light Mode: Rich Deep Violet
+  }`}
+>
+  Apply Now
+</motion.button>
             </div>
           </div>
         </div>
