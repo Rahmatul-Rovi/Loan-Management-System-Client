@@ -141,9 +141,14 @@ const LoginPage = () => {
   return (
     <div className="flex items-center justify-center min-h-screen bg-white px-4">
       <div className="w-full max-w-md bg-white p-8 rounded-2xl shadow-lg">
-        <h2 className="text-3xl font-extrabold text-center text-violet-600 mb-4">
-          Login to Your Account
-        </h2>
+        <div className="text-center mb-6">
+  <h2 className="text-3xl font-extrabold text-violet-600 tracking-tight">
+    Welcome Back!
+  </h2>
+  <p className="text-gray-600 dark:text-gray-600 mt-1 text-sm">
+    Please login to access your account
+  </p>
+</div>
 
         <form onSubmit={handleLogin} className="space-y-5">
           {/* Email */}

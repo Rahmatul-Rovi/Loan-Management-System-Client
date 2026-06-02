@@ -1,11 +1,11 @@
-import React, { useContext, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { Link } from 'react-router';
-import Swal from 'sweetalert2';
-import { AuthContext } from '../../Auth/AuthContext';
-import { signOut } from 'firebase/auth';
-import { auth } from '../../Firebase.init';
-import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import React, { useContext, useState } from "react";
+import { useForm } from "react-hook-form";
+import { Link } from "react-router";
+import Swal from "sweetalert2";
+import { AuthContext } from "../../Auth/AuthContext";
+import { signOut } from "firebase/auth";
+import { auth } from "../../Firebase.init";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const RegisterPage = () => {
   const { createUser, addProfileInfo } = useContext(AuthContext);
@@ -25,37 +25,37 @@ const RegisterPage = () => {
       await addProfileInfo(data.name, data.photoURL);
 
       // Save user to MongoDB (PUBLIC ROUTE)
-      const res = await fetch('https://loan-server-theta.vercel.app/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const res = await fetch("https://loan-server-theta.vercel.app/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: data.name,
           email: data.email,
           password: data.password, //  REQUIRED
-          role: data.role,         // borrower | manager
+          role: data.role, // borrower | manager
           photoURL: data.photoURL,
         }),
       });
 
       if (!res.ok) {
-        throw new Error('MongoDB registration failed');
+        throw new Error("MongoDB registration failed");
       }
 
       // Logout to prevent auto-login
       await signOut(auth);
 
       Swal.fire({
-        icon: 'success',
-        title: 'Registration Successful',
+        icon: "success",
+        title: "Registration Successful",
         text: `Welcome ${data.name}! You can now log in.`,
-        confirmButtonColor: '#4f46e5',
+        confirmButtonColor: "#4f46e5",
       });
 
       reset();
     } catch (error) {
       Swal.fire({
-        icon: 'error',
-        title: 'Registration Failed',
+        icon: "error",
+        title: "Registration Failed",
         text: error.message,
       });
     }
@@ -64,16 +64,21 @@ const RegisterPage = () => {
   return (
     <div className="flex items-center justify-center min-h-screen bg-base-200 px-4">
       <div className="w-full max-w-md bg-base-100 p-8 rounded-2xl shadow-xl">
-        <h2 className="text-3xl font-extrabold text-center text-violet-600 mb-4">
-          Create an Account
-        </h2>
+        <div className="text-center mb-6">
+          <h2 className="text-3xl font-extrabold text-violet-600 tracking-tight">
+            Join QuickLoan!
+          </h2>
+          <p className="text-gray-500 dark:text-gray-500 mt-1 text-sm">
+            Create your account to get started seamlessly
+          </p>
+        </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
           {/* Name */}
           <input
             className="input input-bordered w-full"
             placeholder="Full Name"
-            {...register('name', { required: 'Name is required' })}
+            {...register("name", { required: "Name is required" })}
           />
           {errors.name && <p className="text-red-500">{errors.name.message}</p>}
 
@@ -81,20 +86,20 @@ const RegisterPage = () => {
           <input
             className="input input-bordered w-full"
             placeholder="Email"
-            {...register('email', { required: 'Email is required' })}
+            {...register("email", { required: "Email is required" })}
           />
 
           {/* Photo */}
           <input
             className="input input-bordered w-full"
             placeholder="Photo URL"
-            {...register('photoURL')}
+            {...register("photoURL")}
           />
 
           {/* Role */}
           <select
             className="select select-bordered w-full"
-            {...register('role', { required: 'Role is required' })}
+            {...register("role", { required: "Role is required" })}
           >
             <option value="">Select Role</option>
             <option value="borrower">Borrower</option>
@@ -104,12 +109,12 @@ const RegisterPage = () => {
           {/* Password */}
           <div className="relative">
             <input
-              type={showPassword ? 'text' : 'password'}
+              type={showPassword ? "text" : "password"}
               className="input input-bordered w-full"
               placeholder="Password"
-              {...register('password', {
-                required: 'Password is required',
-                minLength: { value: 6, message: 'Min 6 characters' },
+              {...register("password", {
+                required: "Password is required",
+                minLength: { value: 6, message: "Min 6 characters" },
               })}
             />
             <button
@@ -125,7 +130,7 @@ const RegisterPage = () => {
         </form>
 
         <p className="text-center mt-4">
-          Already have an account?{' '}
+          Already have an account?{" "}
           <Link to="/login" className="text-violet-600 font-semibold">
             Log In
           </Link>
